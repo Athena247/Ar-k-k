@@ -33,11 +33,17 @@ export default function Footer() {
                                 className="w-5 h-5 mt-0.5 text-ember-2"
                                 strokeWidth={1.5}
                             />
-                            <p className="leading-relaxed">
-                                Kadıköy Mah. Söğütlüçeşme Cad. No: 42/A
+                            <a
+                                href="https://www.google.com/maps/search/?api=1&query=Konaklar,+%C5%9Eht.+Aste%C4%9Fmen+Orhan+Sancar+Cd.+No%3A30,+61010+Ortahisar%2FTrabzon"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                data-testid="footer-address"
+                                className="leading-relaxed hover:text-ember-2 transition-colors"
+                            >
+                                Konaklar, Şht. Asteğmen Orhan Sancar Cd. No:30
                                 <br />
-                                Kadıköy · İstanbul
-                            </p>
+                                61010 Ortahisar · Trabzon
+                            </a>
                         </div>
                         <div className="flex items-start gap-3">
                             <Phone
@@ -45,11 +51,11 @@ export default function Footer() {
                                 strokeWidth={1.5}
                             />
                             <a
-                                href="tel:+902120000000"
+                                href="tel:+904623350046"
                                 data-testid="footer-phone"
                                 className="hover:text-ember-2 transition-colors"
                             >
-                                +90 212 000 00 00
+                                0 (462) 335 00 46
                             </a>
                         </div>
                         <div className="flex items-start gap-3">
@@ -57,11 +63,22 @@ export default function Footer() {
                                 className="w-5 h-5 mt-0.5 text-ember-2"
                                 strokeWidth={1.5}
                             />
-                            <p className="leading-relaxed">
-                                {t.everyDay}
-                                <br />
-                                {t.weekend}
-                            </p>
+                            <div
+                                data-testid="footer-hours"
+                                className="leading-relaxed w-full"
+                            >
+                                {t.hours.map((row) => (
+                                    <div
+                                        key={row.day}
+                                        className="flex items-baseline justify-between gap-4 py-0.5"
+                                    >
+                                        <span>{row.day}</span>
+                                        <span className="text-bone/60 tabular-nums">
+                                            {row.time}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
