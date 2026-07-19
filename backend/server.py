@@ -196,20 +196,20 @@ async def seed_admin_and_menu():
     elif not verify_password(admin_pw, existing["password_hash"]):
         await db.users.update_one({"email": admin_email}, {"$set": {"password_hash": hash_password(admin_pw)}})
 
-    # Menu items
-    count = await db.menu_items.count_documents({})
-    if count == 0:
-        now = datetime.now(timezone.utc).isoformat()
-        docs = []
-        for item in SEED_ITEMS:
-            docs.append({
+    # Menu items — upsert each seed item by (name, category) so any missing item is restored
+    now = datetime.now(timezone.utc).isoformat()
+    for item in SEED_ITEMS:
+        existing_item = await db.menu_items.find_one(
+            {"name": item["name"], "category": item["category"]}
+        )
+        if existing_item is None:
+            await db.menu_items.insert_one({
                 "id": str(uuid.uuid4()),
                 **item,
                 "active": True,
                 "created_at": now,
                 "updated_at": now,
             })
-        await db.menu_items.insert_many(docs)
 
 
 # ---------------------------------------------------------------------------
