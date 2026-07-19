@@ -1,0 +1,400 @@
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { adminApi, publicApi } from "@/lib/api";
+import { useAuth } from "@/context/AuthContext";
+import { Pencil, Trash2, Plus, LogOut, X, Star, Flame } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { toast, Toaster } from "sonner";
+
+const EMPTY = {
+    name: "",
+    description: "",
+    price: 0,
+    image: "",
+    category: "kebaplar",
+    popular: false,
+    chef_choice: false,
+    order: 1,
+    active: true,
+};
+
+export default function AdminDashboard() {
+    const { user, logout, loading } = useAuth();
+    const nav = useNavigate();
+    const [items, setItems] = useState([]);
+    const [cats, setCats] = useState([]);
+    const [editing, setEditing] = useState(null); // item being edited or EMPTY (new)
+    const [busy, setBusy] = useState(false);
+
+    useEffect(() => {
+        if (!loading && !user) nav("/admin/login");
+    }, [loading, user, nav]);
+
+    const refresh = async () => {
+        const [its, cs] = await Promise.all([
+            adminApi.list(),
+            publicApi.listCategories(),
+        ]);
+        setItems(its);
+        setCats(cs);
+    };
+
+    useEffect(() => {
+        if (user) refresh().catch((e) => console.error(e));
+    }, [user]);
+
+    const save = async () => {
+        setBusy(true);
+        try {
+            const payload = {
+                ...editing,
+                price: Number(editing.price),
+                order: Number(editing.order || 0),
+            };
+            if (editing.id) {
+                await adminApi.update(editing.id, payload);
+                toast.success("Menü öğesi güncellendi");
+            } else {
+                await adminApi.create(payload);
+                toast.success("Menü öğesi eklendi");
+            }
+            setEditing(null);
+            await refresh();
+        } catch (e) {
+            toast.error(e.response?.data?.detail || "Kayıt başarısız");
+        } finally {
+            setBusy(false);
+        }
+    };
+
+    const remove = async (id) => {
+        if (!window.confirm("Bu menü öğesini silmek istediğinize emin misiniz?"))
+            return;
+        try {
+            await adminApi.remove(id);
+            toast.success("Silindi");
+            await refresh();
+        } catch (e) {
+            toast.error("Silme başarısız");
+        }
+    };
+
+    if (loading || !user) return null;
+
+    const grouped = cats.map((c) => ({
+        ...c,
+        items: items
+            .filter((i) => i.category === c.slug)
+            .sort((a, b) => (a.order || 0) - (b.order || 0)),
+    }));
+
+    return (
+        <div className="min-h-screen bg-bone text-ink">
+            <Toaster position="top-right" richColors />
+
+            <header className="border-b border-line px-4 md:px-12 lg:px-16 py-5 flex items-center justify-between sticky top-0 bg-bone/85 backdrop-blur-md z-30">
+                <div className="flex items-center gap-4">
+                    <Link
+                        to="/"
+                        className="font-serif text-xl md:text-2xl tracking-tight"
+                    >
+                        Arı Köşk
+                        <span className="text-ember italic">.</span>
+                    </Link>
+                    <span className="eyebrow hidden md:inline">Yönetim</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <button
+                        data-testid="new-item-btn"
+                        onClick={() => setEditing({ ...EMPTY })}
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-ink text-bone hover:bg-ember transition-colors text-sm"
+                    >
+                        <Plus className="w-4 h-4" /> Yeni Öğe
+                    </button>
+                    <button
+                        data-testid="logout-btn"
+                        onClick={async () => {
+                            await logout();
+                            nav("/admin/login");
+                        }}
+                        className="inline-flex items-center gap-2 px-4 py-2 border border-line hover:bg-bone-2 transition-colors text-sm"
+                    >
+                        <LogOut className="w-4 h-4" /> Çıkış
+                    </button>
+                </div>
+            </header>
+
+            <main className="px-4 md:px-12 lg:px-16 py-10 md:py-16 space-y-16">
+                {grouped.map((c) => (
+                    <section
+                        key={c.slug}
+                        data-testid={`admin-cat-${c.slug}`}
+                    >
+                        <div className="flex items-baseline justify-between mb-4">
+                            <h2 className="font-serif text-3xl md:text-5xl tracking-[-0.02em]">
+                                {c.name}
+                            </h2>
+                            <span className="eyebrow">
+                                {c.items.length} öğe
+                            </span>
+                        </div>
+                        <div className="border-t border-line">
+                            {c.items.map((it) => (
+                                <div
+                                    key={it.id}
+                                    data-testid={`admin-item-${it.id}`}
+                                    className="grid grid-cols-12 gap-4 py-4 border-b border-line items-center"
+                                >
+                                    <div className="col-span-2 md:col-span-1">
+                                        <div className="frame aspect-square">
+                                            <img
+                                                src={it.image}
+                                                alt=""
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-span-6 md:col-span-7">
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                            <p className="font-serif text-lg md:text-xl">
+                                                {it.name}
+                                            </p>
+                                            {it.popular && (
+                                                <span
+                                                    className="inline-flex items-center gap-1 text-[10px] uppercase tracking-widest text-ink-2"
+                                                    title="Popüler"
+                                                >
+                                                    <Flame className="w-3 h-3" />
+                                                    Popüler
+                                                </span>
+                                            )}
+                                            {it.chef_choice && (
+                                                <span
+                                                    className="inline-flex items-center gap-1 text-[10px] uppercase tracking-widest text-ember"
+                                                    title="Şefin Seçimi"
+                                                >
+                                                    <Star className="w-3 h-3" />
+                                                    Şef
+                                                </span>
+                                            )}
+                                        </div>
+                                        <p className="text-sm text-ink-2 mt-1 line-clamp-1">
+                                            {it.description}
+                                        </p>
+                                    </div>
+                                    <div className="col-span-2 md:col-span-2 font-serif italic">
+                                        ₺
+                                        {Number(it.price).toLocaleString("tr-TR")}
+                                    </div>
+                                    <div className="col-span-2 md:col-span-2 flex items-center justify-end gap-2">
+                                        <button
+                                            data-testid={`edit-${it.id}`}
+                                            onClick={() => setEditing({ ...it })}
+                                            className="w-9 h-9 inline-flex items-center justify-center border border-line hover:bg-ink hover:text-bone transition-colors"
+                                            aria-label="Düzenle"
+                                        >
+                                            <Pencil className="w-4 h-4" strokeWidth={1.5} />
+                                        </button>
+                                        <button
+                                            data-testid={`delete-${it.id}`}
+                                            onClick={() => remove(it.id)}
+                                            className="w-9 h-9 inline-flex items-center justify-center border border-line hover:bg-ember hover:text-bone hover:border-ember transition-colors"
+                                            aria-label="Sil"
+                                        >
+                                            <Trash2 className="w-4 h-4" strokeWidth={1.5} />
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                            {c.items.length === 0 && (
+                                <p className="py-8 text-center text-ink-2 text-sm">
+                                    Bu kategoride henüz öğe yok.
+                                </p>
+                            )}
+                        </div>
+                    </section>
+                ))}
+            </main>
+
+            <AnimatePresence>
+                {editing && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100] bg-ink/40 backdrop-blur-md flex items-center justify-center p-4"
+                        onClick={() => setEditing(null)}
+                    >
+                        <motion.div
+                            initial={{ y: 30, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: 20, opacity: 0 }}
+                            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-full max-w-2xl bg-bone border border-line p-8 md:p-10 relative max-h-[92vh] overflow-y-auto"
+                            data-testid="item-form"
+                        >
+                            <button
+                                onClick={() => setEditing(null)}
+                                className="absolute top-4 right-4 w-9 h-9 inline-flex items-center justify-center rounded-full hover:bg-bone-2"
+                                data-testid="form-close"
+                                aria-label="Kapat"
+                            >
+                                <X className="w-4 h-4" />
+                            </button>
+                            <p className="eyebrow">
+                                {editing.id ? "Düzenle" : "Yeni Öğe"}
+                            </p>
+                            <h3 className="font-serif italic text-3xl md:text-4xl mt-2 mb-8 leading-tight">
+                                Menü kartı
+                            </h3>
+
+                            <div className="grid grid-cols-2 gap-5">
+                                <label className="col-span-2 block">
+                                    <span className="eyebrow">Yemek Adı</span>
+                                    <input
+                                        data-testid="form-name"
+                                        value={editing.name}
+                                        onChange={(e) =>
+                                            setEditing({ ...editing, name: e.target.value })
+                                        }
+                                        className="w-full bg-transparent border-0 border-b border-line focus:border-ember outline-none py-2 mt-1 text-lg"
+                                    />
+                                </label>
+                                <label className="col-span-2 block">
+                                    <span className="eyebrow">Açıklama</span>
+                                    <textarea
+                                        data-testid="form-description"
+                                        rows={2}
+                                        value={editing.description}
+                                        onChange={(e) =>
+                                            setEditing({
+                                                ...editing,
+                                                description: e.target.value,
+                                            })
+                                        }
+                                        className="w-full bg-transparent border-0 border-b border-line focus:border-ember outline-none py-2 mt-1"
+                                    />
+                                </label>
+                                <label className="block">
+                                    <span className="eyebrow">Fiyat (₺)</span>
+                                    <input
+                                        data-testid="form-price"
+                                        type="number"
+                                        value={editing.price}
+                                        onChange={(e) =>
+                                            setEditing({ ...editing, price: e.target.value })
+                                        }
+                                        className="w-full bg-transparent border-0 border-b border-line focus:border-ember outline-none py-2 mt-1"
+                                    />
+                                </label>
+                                <label className="block">
+                                    <span className="eyebrow">Sıra</span>
+                                    <input
+                                        data-testid="form-order"
+                                        type="number"
+                                        value={editing.order || 0}
+                                        onChange={(e) =>
+                                            setEditing({ ...editing, order: e.target.value })
+                                        }
+                                        className="w-full bg-transparent border-0 border-b border-line focus:border-ember outline-none py-2 mt-1"
+                                    />
+                                </label>
+                                <label className="col-span-2 block">
+                                    <span className="eyebrow">Kategori</span>
+                                    <div
+                                        role="radiogroup"
+                                        data-testid="form-category"
+                                        className="flex flex-wrap gap-2 mt-2"
+                                    >
+                                        {cats.map((c) => (
+                                            <button
+                                                key={c.slug}
+                                                type="button"
+                                                role="radio"
+                                                aria-checked={editing.category === c.slug}
+                                                data-testid={`form-cat-${c.slug}`}
+                                                onClick={() =>
+                                                    setEditing({
+                                                        ...editing,
+                                                        category: c.slug,
+                                                    })
+                                                }
+                                                className={`px-3 py-1.5 text-sm rounded-full border ${
+                                                    editing.category === c.slug
+                                                        ? "bg-ink text-bone border-ink"
+                                                        : "border-line hover:border-ink"
+                                                }`}
+                                            >
+                                                {c.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </label>
+                                <label className="col-span-2 block">
+                                    <span className="eyebrow">Görsel URL</span>
+                                    <input
+                                        data-testid="form-image"
+                                        value={editing.image}
+                                        onChange={(e) =>
+                                            setEditing({ ...editing, image: e.target.value })
+                                        }
+                                        placeholder="https://images.unsplash.com/..."
+                                        className="w-full bg-transparent border-0 border-b border-line focus:border-ember outline-none py-2 mt-1"
+                                    />
+                                </label>
+                                <label className="flex items-center gap-3 cursor-pointer">
+                                    <input
+                                        data-testid="form-popular"
+                                        type="checkbox"
+                                        checked={!!editing.popular}
+                                        onChange={(e) =>
+                                            setEditing({
+                                                ...editing,
+                                                popular: e.target.checked,
+                                            })
+                                        }
+                                        className="w-4 h-4 accent-ember"
+                                    />
+                                    <span className="text-sm">Popüler</span>
+                                </label>
+                                <label className="flex items-center gap-3 cursor-pointer">
+                                    <input
+                                        data-testid="form-chef"
+                                        type="checkbox"
+                                        checked={!!editing.chef_choice}
+                                        onChange={(e) =>
+                                            setEditing({
+                                                ...editing,
+                                                chef_choice: e.target.checked,
+                                            })
+                                        }
+                                        className="w-4 h-4 accent-ember"
+                                    />
+                                    <span className="text-sm">Şefin Seçimi</span>
+                                </label>
+                            </div>
+
+                            <div className="flex items-center gap-3 mt-8">
+                                <button
+                                    data-testid="form-save"
+                                    onClick={save}
+                                    disabled={busy}
+                                    className="px-6 py-3 bg-ink text-bone hover:bg-ember transition-colors disabled:opacity-50"
+                                >
+                                    {busy ? "Kaydediliyor…" : "Kaydet"}
+                                </button>
+                                <button
+                                    onClick={() => setEditing(null)}
+                                    className="px-6 py-3 border border-line hover:bg-bone-2 transition-colors"
+                                >
+                                    Vazgeç
+                                </button>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    );
+}
