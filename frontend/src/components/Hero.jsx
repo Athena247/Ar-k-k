@@ -41,7 +41,7 @@ export default function Hero({ onExplore }) {
                 <div className="flex items-center gap-3">
                     <span className="dot" aria-hidden />
                     <span className="eyebrow" data-testid="hero-open-badge">
-                        {t.open} · {time} İstanbul
+                        {t.open} · {time}
                     </span>
                 </div>
                 <div className="hidden md:flex items-center gap-8 eyebrow">
