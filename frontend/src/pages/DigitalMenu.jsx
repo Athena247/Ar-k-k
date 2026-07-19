@@ -133,3 +133,4 @@ export default function DigitalMenu() {
             <QRModal open={qrOpen} onClose={() => setQrOpen(false)} />
         </div>
     );
+}
