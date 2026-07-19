@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: Ar-k-k
+    runtime: node
+    repo: https://github.com/Athena247/Ar-k-k
+    rootDirectory: backend
+    buildCommand: npm install
+    startCommand: npm start
