@@ -1,0 +1,124 @@
+{
+  "theme": "light",
+  "art_direction": "Editorial & Magazine Inspired - Awwwards Style Restaurant Experience",
+  "colors": {
+    "background": {
+      "primary": "#F7F5F0",
+      "secondary": "#EAE6DF",
+      "overlay": "rgba(247, 245, 240, 0.85)"
+    },
+    "text": {
+      "primary": "#1A1A1A",
+      "secondary": "#4A4A4A",
+      "accent": "#C44100"
+    },
+    "accent": {
+      "primary": "#D35400",
+      "hover": "#E67E22",
+      "saffron": "#F39C12",
+      "ember": "#E74C3C"
+    },
+    "border": {
+      "default": "#D1CCC2",
+      "focus": "#C44100"
+    },
+    "badges": {
+      "popular_bg": "#1A1A1A",
+      "popular_text": "#F7F5F0",
+      "chef_bg": "#C44100",
+      "chef_text": "#F7F5F0"
+    }
+  },
+  "typography": {
+    "headings": {
+      "fontFamily": "'Playfair Display', 'Bodoni Moda', serif",
+      "weights": [400, 500, 700],
+      "styles": ["normal", "italic"],
+      "usage": "Use for Hero heading, category titles, section headers, and manifesto chapters. Use italic selectively for editorial flair."
+    },
+    "body": {
+      "fontFamily": "'Manrope', 'Chivo', sans-serif",
+      "weights": [300, 400, 500, 600],
+      "usage": "Use for menu descriptions, prices, navigation, and UI elements. High legibility."
+    },
+    "display": {
+      "fontFamily": "'Playfair Display', serif",
+      "usage": "Hero kinetic typography."
+    }
+  },
+  "layouts": {
+    "container": "Max-width of 1440px with generous padding (px-6 md:px-12 lg:px-24) to frame the content like a magazine page.",
+    "hero": "Full viewport height (100vh). Flex layout, content heavily centered or bottom-aligned. Large typography with masked line-by-line reveal.",
+    "navigation": "Sticky, top-0, z-50. Glassmorphism effect on scroll. Horizontal scrollable list on mobile (hide scrollbar) and elegant inline list on desktop.",
+    "menu_grid": "CSS Grid: 1 column on mobile (100% width), 2 columns on tablet, 2 or 3 columns on desktop. Use generous gaps (gap-8 md:gap-12).",
+    "menu_card": "Flex row for desktop (image left, content right), flex col for mobile (image top, content bottom). Avoid heavy shadows; use a 1px delicate border (border-[#D1CCC2]) or no border with subtle background on hover."
+  },
+  "spacing": {
+    "section_padding": "py-20 md:py-32",
+    "card_padding": "p-4 md:p-6",
+    "gap_small": "gap-2",
+    "gap_medium": "gap-6",
+    "gap_large": "gap-12"
+  },
+  "motion": {
+    "smooth_scroll": "Lenis library for smooth momentum scrolling.",
+    "hero_reveal": "Framer Motion: Masked line-by-line reveal for 'Arı Köşk' text. `initial={{ y: '100%', opacity: 0 }}` to `animate={{ y: 0, opacity: 1 }}` with stagger.",
+    "scroll_reveal": "Framer Motion: Fade up and slight translate-y on scroll into view for menu categories and items. `whileInView={{ opacity: 1, y: 0 }}`.",
+    "hover_states": "Menu Cards: Image zooms slightly (`scale-105`) within a clipped frame on hover. Background tint shifts slightly.",
+    "parallax": "Subtle parallax on the hero background image or a 3D float effect on a prominent dish image.",
+    "marquee": "Slow editorial marquee for 'Pide & Kebap & Lahmacun - Odun Ateşinde Lezzet' using `react-fast-marquee`. Low contrast or outline typography."
+  },
+  "visual_enhancers": {
+    "images": "Spotlight treatment. Real product photography treated deliberately. Use clipped frames with varied aspect ratios (e.g., 3:4 portrait or 16:9 landscape) to mimic editorial spreads.",
+    "manifesto": "Numbered chapters (01, 02, 03). Use massive typography for numbers paired with small, crisp body text.",
+    "borders": "Use 1px solid lines to separate sections and create a grid-like, structured editorial layout."
+  },
+  "components": {
+    "badges": "Pill-shaped, uppercase, tracking-widest, text-[10px] or text-xs.",
+    "buttons": "Pill-shaped or sharp rectangular. Primary button: deep charcoal background, bone-white text. Hover: subtle scale and background shift to accent color.",
+    "search_bar": "Minimalist underline input. No heavy borders. Placeholder text in elegant serif or clean sans.",
+    "qr_modal": "Backdrop blur (glassmorphism). Clean white/bone container. Centered QR code and elegant 'Share Menu' text."
+  },
+  "image_urls": {
+    "kebap": "https://images.pexels.com/photos/17794709/pexels-photo-17794709.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "pide": "https://images.unsplash.com/photo-1772758632889-b3518f24a4a7?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTF8MHwxfHNlYXJjaHw0fHx0dXJraXNoJTIwZmxhdGJyZWFkJTIwcGlkZXxlbnwwfHx8fDE3ODQ0NzQyMzF8MA&ixlib=rb-4.1.0&q=85",
+    "lahmacun": "https://images.pexels.com/photos/7545571/pexels-photo-7545571.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "corba": "https://images.unsplash.com/photo-1761830476467-0ff86dbcc75d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNzl8MHwxfHNlYXJjaHw0fHxzb3VwJTIwYm93bCUyMHJlc3RhdXJhbnR8ZW58MHx8fHwxNzg0NDc0MjMxfDA&ixlib=rb-4.1.0&q=85",
+    "tatli": "https://images.pexels.com/photos/35712797/pexels-photo-35712797.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "icecek": "https://images.pexels.com/photos/28617425/pexels-photo-28617425.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "hero_background": "https://images.pexels.com/photos/5779787/pexels-photo-5779787.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "manifesto_image": "https://images.pexels.com/photos/37532766/pexels-photo-37532766.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+  },
+  "accessibility": {
+    "contrast": "Ensure primary text (#1A1A1A) on background (#F7F5F0) exceeds APCA/WCAG ratios. Accent colors on light background should be legible.",
+    "focus": "All interactive elements must have a visible focus ring (focus:ring-2 focus:ring-[#C44100]).",
+    "aria": "Use aria-labels for navigation, search inputs, and modal triggers.",
+    "motion": "Respect prefers-reduced-motion media query to disable Lenis and Framer Motion effects for applicable users."
+  },
+  "instructions_to_main_agent": [
+    "You are building an Awwwards-style Single Page Application for a digital restaurant menu.",
+    "Use framer-motion extensively for scroll reveals, text masking, and micro-interactions.",
+    "Implement @studio-freight/lenis or lenis for smooth momentum scrolling.",
+    "Ensure the hero section features a kinetic masked line-by-line text reveal of 'Arı Köşk'.",
+    "The sticky navigation must be horizontally scrollable on mobile (hide scrollbar) and elegantly designed.",
+    "Include a dynamic search bar that filters menu items instantly.",
+    "Build an Admin panel for CRUD operations with MongoDB backend. Default dummy data for Arı Köşk should be pre-seeded.",
+    "Include a 'Share Menu' button that opens a Modal with a QR Code.",
+    "Create a slow editorial marquee section (e.g., 'Pide & Kebap & Lahmacun').",
+    "Create a numbered manifesto section with large, beautiful typography describing the restaurant philosophy.",
+    "Do NOT use HTML `<select>` or `<input type=\"date\">`. Use custom components if needed.",
+    "All interactive elements MUST include `data-testid` attributes (e.g., `data-testid=\"category-tab-kebap\"`).",
+    "Follow standard Javascript/React practices. Ensure components are .jsx or .js (as per project setup, .js files are used)."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "Do not converge toward generic 'AI slop' frontend design.",
+    "Avoid generic centered layouts and simplistic gradients.",
+    "Create depth through layered design elements, z-index hierarchy, and subtle shadows/borders.",
+    "Use glassmorphism selectively and ensure text over it is legible (do not use fully transparent overlays).",
+    "Do NOT apply `transition: all`. Target specific properties.",
+    "Use 2-3x more spacing (Tailwind p-8, p-12, py-24) than feels comfortable to achieve a premium editorial feel.",
+    "Every interaction needs a micro-animation (hover state, focus state).",
+    "Use the specific Unsplash/Pexels image URLs provided in the guidelines. Never use placeholder text or dummy image URLs.",
+    "Prioritize optical alignment over geometric alignment."
+  ]
+}
