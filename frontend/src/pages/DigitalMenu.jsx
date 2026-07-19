@@ -76,10 +76,10 @@ export default function DigitalMenu() {
         return map;
     }, [items, query]);
 
-    const totalFiltered = Object.values(grouped).reduce(
-        (n, arr) => n + arr.length,
-        0
-    );
+    const totalFiltered = useMemo(() => {
+        if (!grouped || typeof grouped !== 'object') return 0;
+        return Object.values(grouped).reduce((n, arr) => n + (arr?.length || 0), 0);
+    }, [grouped]);
 
     return (
         <div className="grain min-h-screen bg-bone text-ink" id="top">
@@ -115,16 +115,17 @@ export default function DigitalMenu() {
                 </div>
             ) : (
                 <div>
-                    {Array.isArray(categories) && categories.map((c, i) =>
-                        grouped[c.slug] && grouped[c.slug].length > 0 ? (
+                    {Array.isArray(categories) && categories.map((c, i) => {
+                        const sectionItems = grouped[c.slug];
+                        return sectionItems && sectionItems.length > 0 ? (
                             <MenuSection
                                 key={c.slug}
                                 category={c}
-                                items={grouped[c.slug]}
+                                items={sectionItems}
                                 chapter={i + 1}
-                            />
-                        ) : null
-                    )}
+                             />
+                        ) : null;
+                    })}
                 </div>
             )}
 
