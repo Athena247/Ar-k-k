@@ -70,7 +70,7 @@ export default function CategoryNav({
                         className="flex-1 overflow-x-auto no-scrollbar"
                     >
                         <ul className="flex items-center gap-2 md:gap-1">
-                            {categories.map((c) => {
+                            {Array.isArray(categories) && categories.map((c) => {
                                 const isActive = c.slug === active;
                                 return (
                                     <li key={c.slug} className="shrink-0">
