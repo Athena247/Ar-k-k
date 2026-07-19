@@ -33,7 +33,7 @@ export default function DigitalMenu() {
 
     // Track active category on scroll
     useEffect(() => {
-        if (!categories.length) return;
+        if (!categories || !Array.isArray(categories) || categories.length === 0) return;
         const observer = new IntersectionObserver(
             (entries) => {
                 for (const entry of entries) {
@@ -51,9 +51,7 @@ export default function DigitalMenu() {
             if (el) observer.observe(el);
         });
         return () => observer.disconnect();
-    }, [categories, items]);
-
-    const grouped = useMemo(() => {
+        const grouped = useMemo(() => {
         const q = query.trim().toLocaleLowerCase("tr");
         const filtered = q
             ? items.filter((i) => {
