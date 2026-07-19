@@ -115,7 +115,7 @@ export default function DigitalMenu() {
                 </div>
             ) : (
                 <div>
-                    {categories.map((c, i) =>
+                    {Array.isArray(categories) && categories.map((c, i) =>
                         grouped[c.slug] && grouped[c.slug].length > 0 ? (
                             <MenuSection
                                 key={c.slug}
