@@ -35,3 +35,15 @@ Turkish digital menu SPA for "Arı Köşk Pide & Kebap & Lahmacun". Mobile-first
 - P2: Category reorder & drag-drop in admin
 - P2: Featured "Today's specials" scheduler
 - P2: WhatsApp-order deep link per item
+
+## Iteration 2 (2026-07-19)
+- **TR/EN toggle:** LangContext + LangToggle (pill), all public UI localized (hero, categories, cards, badges, manifesto, footer, QR modal, empty state). Persisted via localStorage `arikosk_lang`. All 24 seed items + 6 categories carry `name_en` / `description_en` (seed backfill on startup).
+- **Cloudinary image upload:** `/api/admin/cloudinary/signature` (admin-only, folder-guarded to `arikosk/*`); frontend `ImageUpload` widget with progress bar replaces the URL input; direct-to-Cloudinary signed upload.
+- Admin form: TR / EN tabs with animated pill for name & description bilingual fields.
+- Backend tests: 13/13. Frontend E2E flows pass.
+
+## Backlog
+- P1: Category reorder + drag-drop in admin
+- P2: WhatsApp deep-link per item
+- P2: "Today's Special" scheduler (rotating hero pick)
+- P3: Split LangContext STRINGS into /locales/{tr,en}.json when list grows
