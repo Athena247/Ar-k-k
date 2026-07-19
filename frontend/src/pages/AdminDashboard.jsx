@@ -5,10 +5,13 @@ import { useAuth } from "@/context/AuthContext";
 import { Pencil, Trash2, Plus, LogOut, X, Star, Flame } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast, Toaster } from "sonner";
+import ImageUpload from "@/components/ImageUpload";
 
 const EMPTY = {
     name: "",
+    name_en: "",
     description: "",
+    description_en: "",
     price: 0,
     image: "",
     category: "kebaplar",
@@ -24,6 +27,7 @@ export default function AdminDashboard() {
     const [items, setItems] = useState([]);
     const [cats, setCats] = useState([]);
     const [editing, setEditing] = useState(null); // item being edited or EMPTY (new)
+    const [formLang, setFormLang] = useState("tr");
     const [busy, setBusy] = useState(false);
 
     useEffect(() => {
@@ -106,7 +110,10 @@ export default function AdminDashboard() {
                 <div className="flex items-center gap-2">
                     <button
                         data-testid="new-item-btn"
-                        onClick={() => setEditing({ ...EMPTY })}
+                        onClick={() => {
+                            setFormLang("tr");
+                            setEditing({ ...EMPTY });
+                        }}
                         className="inline-flex items-center gap-2 px-4 py-2 bg-ink text-bone hover:bg-ember transition-colors text-sm"
                     >
                         <Plus className="w-4 h-4" /> Yeni Öğe
@@ -189,7 +196,10 @@ export default function AdminDashboard() {
                                     <div className="col-span-2 md:col-span-2 flex items-center justify-end gap-2">
                                         <button
                                             data-testid={`edit-${it.id}`}
-                                            onClick={() => setEditing({ ...it })}
+                                            onClick={() => {
+                                                setFormLang("tr");
+                                                setEditing({ ...it });
+                                            }}
                                             className="w-9 h-9 inline-flex items-center justify-center border border-line hover:bg-ink hover:text-bone transition-colors"
                                             aria-label="Düzenle"
                                         >
@@ -250,32 +260,122 @@ export default function AdminDashboard() {
                             </h3>
 
                             <div className="grid grid-cols-2 gap-5">
-                                <label className="col-span-2 block">
-                                    <span className="eyebrow">Yemek Adı</span>
-                                    <input
-                                        data-testid="form-name"
-                                        value={editing.name}
-                                        onChange={(e) =>
-                                            setEditing({ ...editing, name: e.target.value })
-                                        }
-                                        className="w-full bg-transparent border-0 border-b border-line focus:border-ember outline-none py-2 mt-1 text-lg"
-                                    />
-                                </label>
-                                <label className="col-span-2 block">
-                                    <span className="eyebrow">Açıklama</span>
-                                    <textarea
-                                        data-testid="form-description"
-                                        rows={2}
-                                        value={editing.description}
-                                        onChange={(e) =>
-                                            setEditing({
-                                                ...editing,
-                                                description: e.target.value,
-                                            })
-                                        }
-                                        className="w-full bg-transparent border-0 border-b border-line focus:border-ember outline-none py-2 mt-1"
-                                    />
-                                </label>
+                                {/* Language tabs for name + description */}
+                                <div className="col-span-2">
+                                    <div
+                                        data-testid="form-lang-tabs"
+                                        role="tablist"
+                                        className="inline-flex items-center gap-1 border border-line rounded-full p-1 mb-1"
+                                    >
+                                        {["tr", "en"].map((lg) => (
+                                            <button
+                                                key={lg}
+                                                type="button"
+                                                role="tab"
+                                                data-testid={`form-lang-${lg}`}
+                                                aria-selected={formLang === lg}
+                                                onClick={() => setFormLang(lg)}
+                                                className={`relative px-3 py-1 text-[11px] tracking-[0.22em] uppercase font-medium transition-colors ${
+                                                    formLang === lg
+                                                        ? "text-bone"
+                                                        : "text-ink-2 hover:text-ink"
+                                                }`}
+                                            >
+                                                {formLang === lg && (
+                                                    <motion.span
+                                                        layoutId="form-lang-pill"
+                                                        transition={{
+                                                            type: "spring",
+                                                            stiffness: 380,
+                                                            damping: 32,
+                                                        }}
+                                                        className="absolute inset-0 bg-ink rounded-full"
+                                                    />
+                                                )}
+                                                <span className="relative">
+                                                    {lg === "tr"
+                                                        ? "Türkçe"
+                                                        : "English"}
+                                                </span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {formLang === "tr" ? (
+                                    <>
+                                        <label className="col-span-2 block">
+                                            <span className="eyebrow">
+                                                Yemek Adı (TR)
+                                            </span>
+                                            <input
+                                                data-testid="form-name"
+                                                value={editing.name}
+                                                onChange={(e) =>
+                                                    setEditing({
+                                                        ...editing,
+                                                        name: e.target.value,
+                                                    })
+                                                }
+                                                className="w-full bg-transparent border-0 border-b border-line focus:border-ember outline-none py-2 mt-1 text-lg"
+                                            />
+                                        </label>
+                                        <label className="col-span-2 block">
+                                            <span className="eyebrow">
+                                                Açıklama (TR)
+                                            </span>
+                                            <textarea
+                                                data-testid="form-description"
+                                                rows={2}
+                                                value={editing.description}
+                                                onChange={(e) =>
+                                                    setEditing({
+                                                        ...editing,
+                                                        description: e.target.value,
+                                                    })
+                                                }
+                                                className="w-full bg-transparent border-0 border-b border-line focus:border-ember outline-none py-2 mt-1"
+                                            />
+                                        </label>
+                                    </>
+                                ) : (
+                                    <>
+                                        <label className="col-span-2 block">
+                                            <span className="eyebrow">
+                                                Dish Name (EN)
+                                            </span>
+                                            <input
+                                                data-testid="form-name-en"
+                                                value={editing.name_en || ""}
+                                                onChange={(e) =>
+                                                    setEditing({
+                                                        ...editing,
+                                                        name_en: e.target.value,
+                                                    })
+                                                }
+                                                className="w-full bg-transparent border-0 border-b border-line focus:border-ember outline-none py-2 mt-1 text-lg"
+                                            />
+                                        </label>
+                                        <label className="col-span-2 block">
+                                            <span className="eyebrow">
+                                                Description (EN)
+                                            </span>
+                                            <textarea
+                                                data-testid="form-description-en"
+                                                rows={2}
+                                                value={editing.description_en || ""}
+                                                onChange={(e) =>
+                                                    setEditing({
+                                                        ...editing,
+                                                        description_en: e.target.value,
+                                                    })
+                                                }
+                                                className="w-full bg-transparent border-0 border-b border-line focus:border-ember outline-none py-2 mt-1"
+                                            />
+                                        </label>
+                                    </>
+                                )}
+
                                 <label className="block">
                                     <span className="eyebrow">Fiyat (₺)</span>
                                     <input
@@ -331,18 +431,17 @@ export default function AdminDashboard() {
                                         ))}
                                     </div>
                                 </label>
-                                <label className="col-span-2 block">
-                                    <span className="eyebrow">Görsel URL</span>
-                                    <input
-                                        data-testid="form-image"
+                                <div className="col-span-2 block">
+                                    <span className="eyebrow block mb-2">
+                                        Görsel
+                                    </span>
+                                    <ImageUpload
                                         value={editing.image}
-                                        onChange={(e) =>
-                                            setEditing({ ...editing, image: e.target.value })
+                                        onChange={(url) =>
+                                            setEditing({ ...editing, image: url })
                                         }
-                                        placeholder="https://images.unsplash.com/..."
-                                        className="w-full bg-transparent border-0 border-b border-line focus:border-ember outline-none py-2 mt-1"
                                     />
-                                </label>
+                                </div>
                                 <label className="flex items-center gap-3 cursor-pointer">
                                     <input
                                         data-testid="form-popular"

@@ -1,0 +1,32 @@
+{
+  "summary": "Iteration 2 — TR/EN localization + Cloudinary upload. Backend: 13/13 pytest passed including new EN category/item fields, Cloudinary signature auth+folder-guard, and bilingual CRUD. Frontend: language toggle (TR/EN) works, persists in localStorage 'arikosk_lang' across reloads, switches category tabs (Çorbalar↔Soups), item names (Adana Kebap↔Adana Kebab, Mercimek Çorbası↔Lentil Soup) and section labels. Admin form has form-lang-tr/form-lang-en tabs, EN toggles to form-name-en/form-description-en (TR fields unmount), old form-image URL input is removed, ImageUpload widget present with image-upload-btn/image-file-input. Bilingual create via UI persisted with name_en/description_en (verified via API).",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "ImageUpload preview", "issues": ["When editing.image === '' (no image yet), an <img src=''> is still rendered inside the frame — triggers React warning 'An empty string (\"\") was passed to the src attribute'. Suggest render <img> only when value is non-empty (which the outer conditional already does — looks like the warning is emitted before value renders; consider explicit `value ? <img ... /> : <placeholder />` guard already present, but the empty string may be entering value via editing.image=''). Non-blocking."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/backend_test.py", "/app/test_reports/pytest/pytest_results.xml"],
+  "action_items": [
+    "(Optional) Suppress the empty-src <img> React warning in ImageUpload when value is an empty string (guard with `value && <img />`)."
+  ],
+  "critical_code_review_comments": [
+    "server.py: `import time as _time` sits mid-file; move to top-level imports for consistency.",
+    "Cloudinary secret is only checked inside the signature route — good; folder allow-list ('arikosk/') prevents cross-tenant abuse.",
+    "AdminDashboard.jsx save() does not validate required fields (name/price); backend will accept but user gets no feedback if e.g. name empty. Consider client-side required attrs.",
+    "ImageUpload does not fall back if Cloudinary signature endpoint returns 500 (misconfigured secret); relies on generic toast — OK.",
+    "LangContext STRINGS is a 100+ line dict; fine for now, but could split into /locales/{tr,en}.json when it grows."
+  ],
+  "updated_files": ["/app/backend/tests/backend_test.py"],
+  "success_rate": {"backend": "100% (13/13)", "frontend": "100% for tested flows"},
+  "test_credentials": "admin@arikosk.com / arikosk2025 (from /app/memory/test_credentials.md)",
+  "seed_data_creation": "None persistent. TEST_UI_Bilingual + TEST_Bilingual items were created and cleaned up.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "iteration 2 features (TR/EN + Cloudinary signature + bilingual CRUD + ImageUpload widget) all pass. Prior 'Mercimek Çorbası' missing item from iteration 1 is now present (seed backfill fixed drift). Backend tests at /app/backend/tests/backend_test.py cover: categories name_en, seeded items name_en/description_en, cloudinary signature (401/400/200 + folder guard), bilingual CRUD. Frontend testids verified: lang-toggle, lang-tr, lang-en, form-lang-tr, form-lang-en, form-name, form-name-en, form-description, form-description-en, image-upload, image-upload-btn, image-file-input. Old form-image testid confirmed REMOVED."
+}

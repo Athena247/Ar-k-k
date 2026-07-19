@@ -1,27 +1,10 @@
 import React from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { FadeUp } from "./Reveal";
+import { useLang } from "@/context/LangContext";
 
 const MANIFESTO_IMG =
     "https://images.pexels.com/photos/37532766/pexels-photo-37532766.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940";
-
-const CHAPTERS = [
-    {
-        num: "01",
-        title: "Ateş",
-        body: "Her sabah kütükler kesilir, kömür usulca hazırlanır. Kebap ancak doğru ateşle olur; sabır bir malzemedir.",
-    },
-    {
-        num: "02",
-        title: "Zırh",
-        body: "Kıyma makinede değil, iki demir zırhla elle hazırlanır. Doku, ısı ve tuz — Adana&apos;nın hafızasıdır.",
-    },
-    {
-        num: "03",
-        title: "Fırın",
-        body: "Pide hamuru üç kez dinlenir, 380°C&apos;de otuz saniye pişer. İnce, çıtır, tarif kağıda değil ele yazılır.",
-    },
-];
 
 export default function Manifesto() {
     const ref = React.useRef(null);
@@ -30,6 +13,13 @@ export default function Manifesto() {
         offset: ["start end", "end start"],
     });
     const y = useTransform(scrollYProgress, [0, 1], [-60, 60]);
+    const { t } = useLang();
+
+    const CHAPTERS = [
+        { num: "01", title: t.fire, body: t.fireBody },
+        { num: "02", title: t.zirh, body: t.zirhBody },
+        { num: "03", title: t.oven, body: t.ovenBody },
+    ];
 
     return (
         <section
@@ -40,16 +30,18 @@ export default function Manifesto() {
             <div className="grid grid-cols-12 gap-6 md:gap-10">
                 <div className="col-span-12 md:col-span-5 md:sticky md:top-32 self-start">
                     <FadeUp>
-                        <p className="eyebrow mb-6">Manifesto — 1998</p>
+                        <p className="eyebrow mb-6">{t.manifesto}</p>
                         <h2 className="font-serif text-5xl md:text-7xl leading-[0.9] tracking-[-0.02em]">
-                            Üç
-                            <span className="italic text-ember"> ilkeyle</span>
-                            <br /> pişiriyoruz.
+                            {t.threePrinciples}
+                            <span className="italic text-ember">
+                                {t.principlesEmph}
+                            </span>
+                            <br /> {t.weCook}
                         </h2>
                         <div className="mt-8 frame aspect-[4/5] max-w-md">
                             <motion.img
                                 src={MANIFESTO_IMG}
-                                alt="Odun ateşinde ustalık"
+                                alt=""
                                 style={{ y }}
                                 className="w-full h-full object-cover"
                                 loading="lazy"

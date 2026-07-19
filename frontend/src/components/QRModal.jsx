@@ -2,8 +2,10 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { QRCodeSVG } from "qrcode.react";
 import { X, Copy, Check } from "lucide-react";
+import { useLang } from "@/context/LangContext";
 
 export default function QRModal({ open, onClose }) {
+    const { t } = useLang();
     const url =
         typeof window !== "undefined" ? window.location.origin + "/" : "";
     const [copied, setCopied] = React.useState(false);
@@ -45,10 +47,9 @@ export default function QRModal({ open, onClose }) {
                             <X className="w-4 h-4" strokeWidth={1.5} />
                         </button>
 
-                        <p className="eyebrow">Paylaş — QR</p>
+                        <p className="eyebrow">{t.shareQr}</p>
                         <h3 className="font-serif italic text-3xl md:text-4xl mt-2 mb-6 leading-tight">
-                            Menü&apos;yü <br />
-                            masana getir.
+                            {t.qrHeadline}
                         </h3>
 
                         <div className="flex justify-center bg-bone-2/50 border border-line p-6">
@@ -63,8 +64,7 @@ export default function QRModal({ open, onClose }) {
                         </div>
 
                         <p className="text-sm text-ink-2 mt-6 leading-relaxed">
-                            Kamerayla okut veya bağlantıyı kopyala. Menü tüm
-                            cihazlarda sorunsuz açılır.
+                            {t.qrCopy}
                         </p>
 
                         <button

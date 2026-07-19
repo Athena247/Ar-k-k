@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, X, QrCode } from "lucide-react";
 import { scrollToId } from "@/lib/lenis";
+import { useLang, pickCategoryName } from "@/context/LangContext";
 
 export default function CategoryNav({
     categories,
@@ -11,6 +12,7 @@ export default function CategoryNav({
     setQuery,
     onShareClick,
 }) {
+    const { t, lang } = useLang();
     const [scrolled, setScrolled] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
     const listRef = useRef(null);
@@ -94,7 +96,7 @@ export default function CategoryNav({
                                                 />
                                             )}
                                             <span className="relative">
-                                                {c.name}
+                                                {pickCategoryName(c, lang)}
                                             </span>
                                         </button>
                                     </li>
@@ -107,7 +109,7 @@ export default function CategoryNav({
                         <button
                             data-testid="search-toggle-btn"
                             onClick={() => setSearchOpen((v) => !v)}
-                            aria-label="Arama"
+                            aria-label={t.search}
                             className="w-10 h-10 inline-flex items-center justify-center rounded-full hover:bg-bone-2 transition-colors"
                         >
                             {searchOpen ? (
@@ -142,11 +144,11 @@ export default function CategoryNav({
                                     data-testid="search-input"
                                     value={query}
                                     onChange={(e) => setQuery(e.target.value)}
-                                    placeholder="Örn. Adana, künefe, pide..."
+                                    placeholder={t.searchPh}
                                     className="w-full bg-transparent border-0 border-b border-line focus:border-ember outline-none font-serif italic text-2xl md:text-4xl py-3 placeholder:text-ink-2/40 transition-colors"
                                 />
                                 <p className="eyebrow mt-2">
-                                    Menü içinde ara — Enter
+                                    {t.search}
                                 </p>
                             </div>
                         </motion.div>

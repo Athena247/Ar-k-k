@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { MaskedLine } from "./Reveal";
 import { ArrowDown } from "lucide-react";
+import { useLang } from "@/context/LangContext";
+import LangToggle from "./LangToggle";
 
 const HERO_IMG =
     "https://images.pexels.com/photos/5779787/pexels-photo-5779787.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1200&w=1600";
@@ -10,13 +12,14 @@ export default function Hero({ onExplore }) {
     const { scrollY } = useScroll();
     const y = useTransform(scrollY, [0, 800], [0, 180]);
     const scale = useTransform(scrollY, [0, 800], [1, 1.08]);
+    const { t, lang } = useLang();
 
     const [time, setTime] = useState("");
     useEffect(() => {
         const update = () => {
             const d = new Date();
             setTime(
-                d.toLocaleTimeString("tr-TR", {
+                d.toLocaleTimeString(lang === "en" ? "en-GB" : "tr-TR", {
                     timeZone: "Europe/Istanbul",
                     hour: "2-digit",
                     minute: "2-digit",
@@ -24,9 +27,9 @@ export default function Hero({ onExplore }) {
             );
         };
         update();
-        const t = setInterval(update, 60000);
-        return () => clearInterval(t);
-    }, []);
+        const iv = setInterval(update, 60000);
+        return () => clearInterval(iv);
+    }, [lang]);
 
     return (
         <section
@@ -34,47 +37,47 @@ export default function Hero({ onExplore }) {
             className="relative w-full overflow-hidden bg-bone"
         >
             {/* Top meta bar */}
-            <div className="relative z-20 flex items-center justify-between px-6 md:px-12 lg:px-16 pt-6 md:pt-8">
+            <div className="relative z-20 flex items-center justify-between px-6 md:px-12 lg:px-16 pt-6 md:pt-8 gap-4">
                 <div className="flex items-center gap-3">
                     <span className="dot" aria-hidden />
                     <span className="eyebrow" data-testid="hero-open-badge">
-                        Açık · {time} İstanbul
+                        {t.open} · {time} İstanbul
                     </span>
                 </div>
                 <div className="hidden md:flex items-center gap-8 eyebrow">
-                    <span>Est. 1998</span>
-                    <span>Odun Ateşi</span>
-                    <span>Tel · 0212 000 00 00</span>
+                    <span>{t.est}</span>
+                    <span>{t.woodFire}</span>
+                    <span>{t.tel}</span>
                 </div>
-                <a
-                    href="/admin/login"
-                    data-testid="hero-admin-link"
-                    className="eyebrow underline underline-offset-4 hover:text-ember transition-colors"
-                >
-                    Yönetim
-                </a>
+                <div className="flex items-center gap-3">
+                    <LangToggle />
+                    <a
+                        href="/admin/login"
+                        data-testid="hero-admin-link"
+                        className="eyebrow underline underline-offset-4 hover:text-ember transition-colors hidden sm:inline"
+                    >
+                        {t.admin}
+                    </a>
+                </div>
             </div>
 
             {/* Hero content — asymmetric editorial layout */}
             <div className="relative z-10 px-6 md:px-12 lg:px-16 pt-16 md:pt-24 pb-8 md:pb-14 grid grid-cols-12 gap-6 md:gap-10">
-                {/* Left col — chapter marker */}
                 <div className="col-span-12 md:col-span-3 flex md:flex-col justify-between md:justify-start md:pt-8 gap-4">
                     <div>
-                        <p className="eyebrow">Bölüm 00 — Menü</p>
+                        <p className="eyebrow">{t.chapter00}</p>
                         <p className="mt-3 text-sm text-ink-2 max-w-[220px] leading-relaxed">
-                            Zırh kıyması, közlenmiş biber, odun kokusu.
-                            Anadolu&apos;dan sofranıza.
+                            {t.heroSub}
                         </p>
                     </div>
                     <div className="hidden md:block">
-                        <p className="eyebrow">Konsept</p>
+                        <p className="eyebrow">{t.concept}</p>
                         <p className="font-serif italic text-2xl mt-1">
-                            Pide · Kebap · Lahmacun
+                            {t.pideKebapLahmacun}
                         </p>
                     </div>
                 </div>
 
-                {/* Right col — masked wordmark */}
                 <div className="col-span-12 md:col-span-9">
                     <h1
                         data-testid="hero-title"
@@ -83,13 +86,16 @@ export default function Hero({ onExplore }) {
                     >
                         <div className="block text-[19vw] md:text-[15vw] lg:text-[13.5vw]">
                             <MaskedLine delay={0.05}>Arı</MaskedLine>{" "}
-                            <MaskedLine delay={0.15} className="italic text-ember">
+                            <MaskedLine
+                                delay={0.15}
+                                className="italic text-ember"
+                            >
                                 Köşk
                             </MaskedLine>
                         </div>
                         <div className="block text-[7vw] md:text-[3.5vw] lg:text-[3vw] mt-2 md:mt-4 text-ink-2">
                             <MaskedLine delay={0.35}>
-                                Pide · Kebap · Lahmacun
+                                {t.pideKebapLahmacun}
                             </MaskedLine>
                         </div>
                     </h1>
@@ -102,7 +108,11 @@ export default function Hero({ onExplore }) {
                     <motion.div
                         initial={{ opacity: 0, y: 40 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.65, duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+                        transition={{
+                            delay: 0.65,
+                            duration: 1.1,
+                            ease: [0.22, 1, 0.36, 1],
+                        }}
                         className="frame aspect-[16/10] md:aspect-[16/9] rounded-none"
                         style={{ borderTop: "1px solid var(--line)" }}
                     >
@@ -115,11 +125,14 @@ export default function Hero({ onExplore }) {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent pointer-events-none" />
                         <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6 text-bone">
-                            <p className="eyebrow" style={{ color: "#f7f5f0" }}>
-                                Signature — 2025
+                            <p
+                                className="eyebrow"
+                                style={{ color: "#f7f5f0" }}
+                            >
+                                {t.signature}
                             </p>
                             <p className="font-serif italic text-xl md:text-3xl mt-1">
-                                Adana, kömür üstünde
+                                {t.signatureLine}
                             </p>
                         </div>
                     </motion.div>
@@ -132,13 +145,14 @@ export default function Hero({ onExplore }) {
                         transition={{ delay: 1.0, duration: 0.9 }}
                         className="border-t border-line pt-5"
                     >
-                        <p className="eyebrow mb-2">Bugünün Şef Seçimi</p>
+                        <p className="eyebrow mb-2">{t.todaysChoice}</p>
                         <p className="font-serif italic text-2xl md:text-3xl leading-tight">
-                            Beyti Sarma
+                            {lang === "en" ? "Beyti Wrap" : "Beyti Sarma"}
                         </p>
                         <p className="text-sm text-ink-2 mt-2 leading-relaxed">
-                            Zırh kıyma, lavaş sargı, yoğurt ve közlenmiş
-                            domates.
+                            {lang === "en"
+                                ? "Minced meat wrapped in lavash, with yogurt and tomato sauce."
+                                : "Zırh kıyma, lavaş sargı, yoğurt ve közlenmiş domates."}
                         </p>
                         <p className="mt-3 font-medium">₺385</p>
                     </motion.div>
@@ -153,10 +167,13 @@ export default function Hero({ onExplore }) {
                         className="group inline-flex items-center gap-3 self-start text-ink hover:text-ember transition-colors"
                     >
                         <span className="font-serif italic text-2xl md:text-3xl">
-                            Menüyü keşfet
+                            {t.exploreMenu}
                         </span>
                         <span className="inline-flex items-center justify-center w-10 h-10 border border-ink rounded-full group-hover:border-ember group-hover:bg-ember group-hover:text-bone transition-colors">
-                            <ArrowDown className="w-4 h-4" strokeWidth={1.5} />
+                            <ArrowDown
+                                className="w-4 h-4"
+                                strokeWidth={1.5}
+                            />
                         </span>
                     </motion.button>
                 </div>

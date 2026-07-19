@@ -12,10 +12,20 @@ import jwt
 from datetime import datetime, timezone, timedelta
 from typing import List, Optional
 
-from fastapi import FastAPI, APIRouter, HTTPException, Depends, Request, Response
+from fastapi import FastAPI, APIRouter, HTTPException, Depends, Request, Response, Query
 from fastapi.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel, Field, EmailStr
+import cloudinary
+import cloudinary.utils
+
+# Cloudinary setup
+cloudinary.config(
+    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.environ.get("CLOUDINARY_API_KEY"),
+    api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
+    secure=True,
+)
 
 # ---------------------------------------------------------------------------
 # DB
@@ -77,12 +87,12 @@ async def get_current_admin(request: Request) -> dict:
 # Models
 # ---------------------------------------------------------------------------
 CATEGORIES = [
-    {"slug": "corbalar", "name": "Çorbalar", "order": 1},
-    {"slug": "pideler", "name": "Pideler", "order": 2},
-    {"slug": "kebaplar", "name": "Kebaplar", "order": 3},
-    {"slug": "lahmacunlar", "name": "Lahmacunlar", "order": 4},
-    {"slug": "tatlilar", "name": "Tatlılar", "order": 5},
-    {"slug": "icecekler", "name": "İçecekler", "order": 6},
+    {"slug": "corbalar", "name": "Çorbalar", "name_en": "Soups", "order": 1},
+    {"slug": "pideler", "name": "Pideler", "name_en": "Pides", "order": 2},
+    {"slug": "kebaplar", "name": "Kebaplar", "name_en": "Kebabs", "order": 3},
+    {"slug": "lahmacunlar", "name": "Lahmacunlar", "name_en": "Lahmacuns", "order": 4},
+    {"slug": "tatlilar", "name": "Tatlılar", "name_en": "Desserts", "order": 5},
+    {"slug": "icecekler", "name": "İçecekler", "name_en": "Drinks", "order": 6},
 ]
 
 
@@ -93,7 +103,9 @@ class LoginRequest(BaseModel):
 
 class MenuItemCreate(BaseModel):
     name: str
+    name_en: Optional[str] = ""
     description: str
+    description_en: Optional[str] = ""
     price: float
     image: str
     category: str
@@ -105,7 +117,9 @@ class MenuItemCreate(BaseModel):
 
 class MenuItemUpdate(BaseModel):
     name: Optional[str] = None
+    name_en: Optional[str] = None
     description: Optional[str] = None
+    description_en: Optional[str] = None
     price: Optional[float] = None
     image: Optional[str] = None
     category: Optional[str] = None
@@ -144,40 +158,40 @@ IMG = {
 
 SEED_ITEMS = [
     # Çorbalar
-    {"name": "Mercimek Çorbası", "description": "Kırmızı mercimek, taze nane ve limon ile pişirilmiş, ev usulü", "price": 85, "image": IMG["corba"], "category": "corbalar", "popular": True, "chef_choice": False, "order": 1},
-    {"name": "İşkembe Çorbası", "description": "Sarımsak, sirke ve pul biberle servis edilir", "price": 120, "image": IMG["corba"], "category": "corbalar", "popular": False, "chef_choice": False, "order": 2},
-    {"name": "Yayla Çorbası", "description": "Yoğurt, pirinç ve kuru nane ile hazırlanır", "price": 95, "image": IMG["corba"], "category": "corbalar", "popular": False, "chef_choice": False, "order": 3},
+    {"name": "Mercimek Çorbası", "name_en": "Lentil Soup", "description": "Kırmızı mercimek, taze nane ve limon ile pişirilmiş, ev usulü", "description_en": "Homestyle red lentil soup with fresh mint and a squeeze of lemon", "price": 85, "image": IMG["corba"], "category": "corbalar", "popular": True, "chef_choice": False, "order": 1},
+    {"name": "İşkembe Çorbası", "name_en": "Tripe Soup", "description": "Sarımsak, sirke ve pul biberle servis edilir", "description_en": "Served with garlic, vinegar and red pepper flakes", "price": 120, "image": IMG["corba"], "category": "corbalar", "popular": False, "chef_choice": False, "order": 2},
+    {"name": "Yayla Çorbası", "name_en": "Yogurt & Rice Soup", "description": "Yoğurt, pirinç ve kuru nane ile hazırlanır", "description_en": "Yogurt, rice and dried mint — silky and warming", "price": 95, "image": IMG["corba"], "category": "corbalar", "popular": False, "chef_choice": False, "order": 3},
 
     # Pideler
-    {"name": "Kuşbaşılı Pide", "description": "Elde kesilmiş dana kuşbaşı, közlenmiş biber, kekik", "price": 260, "image": IMG["pide"], "category": "pideler", "popular": True, "chef_choice": False, "order": 1},
-    {"name": "Kıymalı Pide", "description": "Zırh kıyması, soğan, maydanoz ve tereyağı", "price": 230, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 2},
-    {"name": "Kaşarlı Pide", "description": "Tam yağlı taze kaşar ve tereyağı ile", "price": 210, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 3},
-    {"name": "Karışık Pide", "description": "Kuşbaşı, kaşar, sucuk, yumurta — hepsi bir arada", "price": 285, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": True, "order": 4},
-    {"name": "Kavurmalı Pide", "description": "Ev yapımı dana kavurma, kekik ve tereyağı", "price": 275, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 5},
+    {"name": "Kuşbaşılı Pide", "name_en": "Diced Beef Pide", "description": "Elde kesilmiş dana kuşbaşı, közlenmiş biber, kekik", "description_en": "Hand-cut beef cubes, roasted peppers, thyme", "price": 260, "image": IMG["pide"], "category": "pideler", "popular": True, "chef_choice": False, "order": 1},
+    {"name": "Kıymalı Pide", "name_en": "Minced Meat Pide", "description": "Zırh kıyması, soğan, maydanoz ve tereyağı", "description_en": "Hand-chopped mince, onion, parsley and butter", "price": 230, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 2},
+    {"name": "Kaşarlı Pide", "name_en": "Cheese Pide", "description": "Tam yağlı taze kaşar ve tereyağı ile", "description_en": "Full-fat aged kaşar cheese with butter", "price": 210, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 3},
+    {"name": "Karışık Pide", "name_en": "Mixed Pide", "description": "Kuşbaşı, kaşar, sucuk, yumurta — hepsi bir arada", "description_en": "Beef, cheese, sujuk and egg — all together", "price": 285, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": True, "order": 4},
+    {"name": "Kavurmalı Pide", "name_en": "Kavurma Pide", "description": "Ev yapımı dana kavurma, kekik ve tereyağı", "description_en": "House-braised beef kavurma with thyme and butter", "price": 275, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 5},
 
     # Kebaplar
-    {"name": "Adana Kebap", "description": "Zırh kıyması, közlenmiş biber ve domates, bulgur pilavı ile", "price": 340, "image": IMG["kebap"], "category": "kebaplar", "popular": True, "chef_choice": True, "order": 1},
-    {"name": "Urfa Kebap", "description": "Acısız zırh kıyması, közlenmiş sebzeler eşliğinde", "price": 340, "image": IMG["kebap"], "category": "kebaplar", "popular": False, "chef_choice": False, "order": 2},
-    {"name": "Beyti Sarma", "description": "Zırh kıyma, lavaş sargı, yoğurt ve domates sosu", "price": 385, "image": IMG["kebap"], "category": "kebaplar", "popular": False, "chef_choice": True, "order": 3},
-    {"name": "Kuzu Şiş", "description": "Marine edilmiş kuzu but, kömür ateşinde", "price": 420, "image": IMG["kebap"], "category": "kebaplar", "popular": True, "chef_choice": False, "order": 4},
-    {"name": "Tavuk Şiş", "description": "Marine tavuk göğsü, közlenmiş domates ve biber", "price": 285, "image": IMG["kebap"], "category": "kebaplar", "popular": False, "chef_choice": False, "order": 5},
-    {"name": "Ciğer Şiş", "description": "Kuzu ciğer, soğan piyaz ve sumak ile", "price": 310, "image": IMG["kebap"], "category": "kebaplar", "popular": False, "chef_choice": False, "order": 6},
+    {"name": "Adana Kebap", "name_en": "Adana Kebab", "description": "Zırh kıyması, közlenmiş biber ve domates, bulgur pilavı ile", "description_en": "Hand-chopped spicy mince, roasted peppers, bulgur pilaf", "price": 340, "image": IMG["kebap"], "category": "kebaplar", "popular": True, "chef_choice": True, "order": 1},
+    {"name": "Urfa Kebap", "name_en": "Urfa Kebab", "description": "Acısız zırh kıyması, közlenmiş sebzeler eşliğinde", "description_en": "Mild hand-chopped mince with roasted vegetables", "price": 340, "image": IMG["kebap"], "category": "kebaplar", "popular": False, "chef_choice": False, "order": 2},
+    {"name": "Beyti Sarma", "name_en": "Beyti Wrap", "description": "Zırh kıyma, lavaş sargı, yoğurt ve domates sosu", "description_en": "Minced meat wrapped in lavash, with yogurt and tomato sauce", "price": 385, "image": IMG["kebap"], "category": "kebaplar", "popular": False, "chef_choice": True, "order": 3},
+    {"name": "Kuzu Şiş", "name_en": "Lamb Skewer", "description": "Marine edilmiş kuzu but, kömür ateşinde", "description_en": "Marinated lamb leg, grilled over charcoal", "price": 420, "image": IMG["kebap"], "category": "kebaplar", "popular": True, "chef_choice": False, "order": 4},
+    {"name": "Tavuk Şiş", "name_en": "Chicken Skewer", "description": "Marine tavuk göğsü, közlenmiş domates ve biber", "description_en": "Marinated chicken breast with roasted tomato and pepper", "price": 285, "image": IMG["kebap"], "category": "kebaplar", "popular": False, "chef_choice": False, "order": 5},
+    {"name": "Ciğer Şiş", "name_en": "Liver Skewer", "description": "Kuzu ciğer, soğan piyaz ve sumak ile", "description_en": "Lamb liver skewers with onion salad and sumac", "price": 310, "image": IMG["kebap"], "category": "kebaplar", "popular": False, "chef_choice": False, "order": 6},
 
     # Lahmacunlar
-    {"name": "Çıtır Lahmacun", "description": "İnce hamur, elde çekilmiş kıyma, maydanoz, limon", "price": 95, "image": IMG["lahmacun"], "category": "lahmacunlar", "popular": True, "chef_choice": False, "order": 1},
-    {"name": "Antep Usulü Acılı", "description": "Acılı harç, taze biber, sumak ve maydanoz", "price": 105, "image": IMG["lahmacun"], "category": "lahmacunlar", "popular": False, "chef_choice": True, "order": 2},
-    {"name": "Peynirli Lahmacun", "description": "Kaşar ve dil peyniri, taze fesleğen", "price": 115, "image": IMG["lahmacun"], "category": "lahmacunlar", "popular": False, "chef_choice": False, "order": 3},
+    {"name": "Çıtır Lahmacun", "name_en": "Crispy Lahmacun", "description": "İnce hamur, elde çekilmiş kıyma, maydanoz, limon", "description_en": "Thin dough, hand-chopped mince, parsley, lemon", "price": 95, "image": IMG["lahmacun"], "category": "lahmacunlar", "popular": True, "chef_choice": False, "order": 1},
+    {"name": "Antep Usulü Acılı", "name_en": "Spicy Antep Style", "description": "Acılı harç, taze biber, sumak ve maydanoz", "description_en": "Spicy meat topping, fresh pepper, sumac and parsley", "price": 105, "image": IMG["lahmacun"], "category": "lahmacunlar", "popular": False, "chef_choice": True, "order": 2},
+    {"name": "Peynirli Lahmacun", "name_en": "Cheese Lahmacun", "description": "Kaşar ve dil peyniri, taze fesleğen", "description_en": "Kaşar and string cheese, fresh basil", "price": 115, "image": IMG["lahmacun"], "category": "lahmacunlar", "popular": False, "chef_choice": False, "order": 3},
 
     # Tatlılar
-    {"name": "Fıstıklı Baklava", "description": "40 kat yufka, taze Antep fıstığı ve tereyağı", "price": 180, "image": IMG["tatli"], "category": "tatlilar", "popular": True, "chef_choice": True, "order": 1},
-    {"name": "Künefe", "description": "Kadayıf, hatay peyniri, şerbet ve fıstık", "price": 190, "image": IMG["tatli"], "category": "tatlilar", "popular": True, "chef_choice": False, "order": 2},
-    {"name": "Sütlaç", "description": "Fırında pişmiş, tarçınlı ev usulü sütlaç", "price": 110, "image": IMG["tatli"], "category": "tatlilar", "popular": False, "chef_choice": False, "order": 3},
+    {"name": "Fıstıklı Baklava", "name_en": "Pistachio Baklava", "description": "40 kat yufka, taze Antep fıstığı ve tereyağı", "description_en": "40 layers of filo, fresh Antep pistachio and butter", "price": 180, "image": IMG["tatli"], "category": "tatlilar", "popular": True, "chef_choice": True, "order": 1},
+    {"name": "Künefe", "name_en": "Künefe", "description": "Kadayıf, hatay peyniri, şerbet ve fıstık", "description_en": "Shredded pastry, Hatay cheese, syrup and pistachio", "price": 190, "image": IMG["tatli"], "category": "tatlilar", "popular": True, "chef_choice": False, "order": 2},
+    {"name": "Sütlaç", "name_en": "Rice Pudding", "description": "Fırında pişmiş, tarçınlı ev usulü sütlaç", "description_en": "Oven-baked, cinnamon-dusted rice pudding", "price": 110, "image": IMG["tatli"], "category": "tatlilar", "popular": False, "chef_choice": False, "order": 3},
 
     # İçecekler
-    {"name": "Şalgam Suyu", "description": "Acılı veya sade, hakiki Adana usulü", "price": 45, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": False, "order": 1},
-    {"name": "Ayran", "description": "Ev yapımı, köpüklü ve serin", "price": 40, "image": IMG["icecek"], "category": "icecekler", "popular": True, "chef_choice": False, "order": 2},
-    {"name": "Türk Kahvesi", "description": "Bakır cezvede pişirilmiş, lokum eşliğinde", "price": 65, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": True, "order": 3},
-    {"name": "Çay", "description": "Demlikte pişmiş, ince belli bardakta", "price": 20, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": False, "order": 4},
+    {"name": "Şalgam Suyu", "name_en": "Turnip Juice", "description": "Acılı veya sade, hakiki Adana usulü", "description_en": "Spicy or mild, authentic Adana style", "price": 45, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": False, "order": 1},
+    {"name": "Ayran", "name_en": "Ayran", "description": "Ev yapımı, köpüklü ve serin", "description_en": "House-made yogurt drink, frothy and cool", "price": 40, "image": IMG["icecek"], "category": "icecekler", "popular": True, "chef_choice": False, "order": 2},
+    {"name": "Türk Kahvesi", "name_en": "Turkish Coffee", "description": "Bakır cezvede pişirilmiş, lokum eşliğinde", "description_en": "Brewed in copper cezve, served with Turkish delight", "price": 65, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": True, "order": 3},
+    {"name": "Çay", "name_en": "Tea", "description": "Demlikte pişmiş, ince belli bardakta", "description_en": "Steeped in samovar, served in a tulip glass", "price": 20, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": False, "order": 4},
 ]
 
 
@@ -196,7 +210,7 @@ async def seed_admin_and_menu():
     elif not verify_password(admin_pw, existing["password_hash"]):
         await db.users.update_one({"email": admin_email}, {"$set": {"password_hash": hash_password(admin_pw)}})
 
-    # Menu items — upsert each seed item by (name, category) so any missing item is restored
+    # Menu items — upsert each seed item by (name, category); backfill missing EN fields
     now = datetime.now(timezone.utc).isoformat()
     for item in SEED_ITEMS:
         existing_item = await db.menu_items.find_one(
@@ -210,6 +224,16 @@ async def seed_admin_and_menu():
                 "created_at": now,
                 "updated_at": now,
             })
+        else:
+            patch = {}
+            if not existing_item.get("name_en"):
+                patch["name_en"] = item.get("name_en", "")
+            if not existing_item.get("description_en"):
+                patch["description_en"] = item.get("description_en", "")
+            if patch:
+                await db.menu_items.update_one(
+                    {"_id": existing_item["_id"]}, {"$set": patch}
+                )
 
 
 # ---------------------------------------------------------------------------
@@ -307,6 +331,37 @@ async def admin_delete_item(item_id: str, user=Depends(get_current_admin)):
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Item not found")
     return {"ok": True}
+
+
+# ---------------------------------------------------------------------------
+# Routes: cloudinary signature (admin-only)
+# ---------------------------------------------------------------------------
+import time as _time
+
+
+@api.get("/admin/cloudinary/signature")
+async def cloudinary_signature(
+    folder: str = Query("arikosk/menu"),
+    user=Depends(get_current_admin),
+):
+    ALLOWED_PREFIXES = ("arikosk/",)
+    if not folder.startswith(ALLOWED_PREFIXES):
+        raise HTTPException(status_code=400, detail="Invalid folder path")
+
+    api_secret = os.environ.get("CLOUDINARY_API_SECRET")
+    if not api_secret:
+        raise HTTPException(status_code=500, detail="Cloudinary not configured")
+
+    timestamp = int(_time.time())
+    params = {"timestamp": timestamp, "folder": folder}
+    signature = cloudinary.utils.api_sign_request(params, api_secret)
+    return {
+        "signature": signature,
+        "timestamp": timestamp,
+        "cloud_name": os.environ.get("CLOUDINARY_CLOUD_NAME"),
+        "api_key": os.environ.get("CLOUDINARY_API_KEY"),
+        "folder": folder,
+    }
 
 
 # ---------------------------------------------------------------------------

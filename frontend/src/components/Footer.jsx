@@ -1,8 +1,10 @@
 import React from "react";
 import { Instagram, Facebook, MapPin, Phone, Clock } from "lucide-react";
 import { FadeUp } from "./Reveal";
+import { useLang } from "@/context/LangContext";
 
 export default function Footer() {
+    const { t } = useLang();
     return (
         <footer
             data-testid="footer"
@@ -15,13 +17,13 @@ export default function Footer() {
                             className="eyebrow"
                             style={{ color: "#f7f5f0aa" }}
                         >
-                            İletişim — Ziyaret
+                            {t.contactVisit}
                         </p>
                         <h2 className="font-serif text-5xl md:text-8xl leading-[0.85] mt-4 tracking-[-0.02em]">
-                            Sofrada
+                            {t.letsMeet}
                             <br />
                             <span className="italic text-ember-2">
-                                buluşalım.
+                                {t.atTheTable}
                             </span>
                         </h2>
                     </div>
@@ -47,7 +49,7 @@ export default function Footer() {
                                 data-testid="footer-phone"
                                 className="hover:text-ember-2 transition-colors"
                             >
-                                0212 000 00 00
+                                +90 212 000 00 00
                             </a>
                         </div>
                         <div className="flex items-start gap-3">
@@ -56,9 +58,9 @@ export default function Footer() {
                                 strokeWidth={1.5}
                             />
                             <p className="leading-relaxed">
-                                Her gün · 11:00 — 23:30
+                                {t.everyDay}
                                 <br />
-                                Cuma & Cumartesi · 00:30
+                                {t.weekend}
                             </p>
                         </div>
                     </div>
@@ -96,7 +98,7 @@ export default function Footer() {
                     className="eyebrow hover:text-ember-2 transition-colors"
                     style={{ color: "#f7f5f0aa" }}
                 >
-                    Yönetim Paneli →
+                    {t.adminPanel}
                 </a>
             </div>
         </footer>

@@ -1,6 +1,7 @@
 import React from "react";
 import MenuCard from "./MenuCard";
 import { FadeUp } from "./Reveal";
+import { useLang, pickCategoryName } from "@/context/LangContext";
 
 const HERO_IMAGES = {
     corbalar:
@@ -17,17 +18,18 @@ const HERO_IMAGES = {
         "https://images.pexels.com/photos/28617425/pexels-photo-28617425.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
 };
 
-const KICKERS = {
-    corbalar: "Sıcak · İlk Tabak",
-    pideler: "Odun Fırını · İnce Hamur",
-    kebaplar: "Kömür Ateşi · Elde İşlenmiş",
-    lahmacunlar: "Antep · Adana Usulü",
-    tatlilar: "Şerbetli · Sütlü",
-    icecekler: "Serin · Aromalı",
-};
-
 export default function MenuSection({ category, items, chapter }) {
+    const { t, lang } = useLang();
     if (!items || items.length === 0) return null;
+
+    const KICKERS = {
+        corbalar: t.soup,
+        pideler: t.pideKick,
+        kebaplar: t.kebapKick,
+        lahmacunlar: t.lahKick,
+        tatlilar: t.tatKick,
+        icecekler: t.icKick,
+    };
 
     return (
         <section
@@ -44,17 +46,17 @@ export default function MenuSection({ category, items, chapter }) {
                     </div>
                     <div className="col-span-10 md:col-span-7">
                         <p className="eyebrow mb-2">
-                            {KICKERS[category.slug] || "Menü"}
+                            {KICKERS[category.slug] || ""}
                         </p>
                         <h2 className="font-serif text-5xl md:text-7xl leading-[0.9] tracking-[-0.02em]">
-                            {category.name}
+                            {pickCategoryName(category, lang)}
                         </h2>
                     </div>
                     <div className="col-span-12 md:col-span-4 hidden md:block">
                         <div className="frame aspect-[4/3]">
                             <img
                                 src={HERO_IMAGES[category.slug]}
-                                alt={category.name}
+                                alt={pickCategoryName(category, lang)}
                                 loading="lazy"
                                 className="w-full h-full object-cover"
                             />

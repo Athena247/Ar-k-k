@@ -8,9 +8,11 @@ import MenuSection from "@/components/MenuSection";
 import Manifesto from "@/components/Manifesto";
 import Footer from "@/components/Footer";
 import QRModal from "@/components/QRModal";
+import { useLang } from "@/context/LangContext";
 
 export default function DigitalMenu() {
     useLenis();
+    const { t, lang } = useLang();
     const [categories, setCategories] = useState([]);
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -54,11 +56,18 @@ export default function DigitalMenu() {
     const grouped = useMemo(() => {
         const q = query.trim().toLocaleLowerCase("tr");
         const filtered = q
-            ? items.filter(
-                  (i) =>
-                      i.name.toLocaleLowerCase("tr").includes(q) ||
-                      i.description.toLocaleLowerCase("tr").includes(q)
-              )
+            ? items.filter((i) => {
+                  const n = (i.name || "").toLocaleLowerCase("tr");
+                  const d = (i.description || "").toLocaleLowerCase("tr");
+                  const ne = (i.name_en || "").toLocaleLowerCase("en");
+                  const de = (i.description_en || "").toLocaleLowerCase("en");
+                  return (
+                      n.includes(q) ||
+                      d.includes(q) ||
+                      ne.includes(q) ||
+                      de.includes(q)
+                  );
+              })
             : items;
         const map = {};
         for (const it of filtered) {
@@ -92,16 +101,16 @@ export default function DigitalMenu() {
                     data-testid="menu-loading"
                     className="px-4 md:px-16 py-32 text-center eyebrow"
                 >
-                    Menü hazırlanıyor…
+                    {t.loading}
                 </div>
             ) : query && totalFiltered === 0 ? (
                 <div
                     data-testid="empty-state"
                     className="px-4 md:px-16 py-32 text-center"
                 >
-                    <p className="eyebrow mb-3">Sonuç yok</p>
+                    <p className="eyebrow mb-3">{t.noResults}</p>
                     <p className="font-serif italic text-3xl md:text-5xl">
-                        &quot;{query}&quot; için bir şey bulamadık.
+                        {t.noMatch(query)}
                     </p>
                 </div>
             ) : (
