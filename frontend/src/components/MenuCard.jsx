@@ -29,6 +29,7 @@ export default function MenuCard({ item, index = 0 }) {
             <article
                 data-testid={`menu-item-${item.id}`}
                 className="group grid grid-cols-12 gap-4 md:gap-6 py-6 md:py-8 border-t border-line"
+                dir={lang === 'ar' ? 'rtl' : 'ltr'}
             >
                 <div className="col-span-4 md:col-span-3">
                     <div className="frame aspect-[4/5] md:aspect-[4/5]">
