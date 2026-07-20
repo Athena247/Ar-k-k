@@ -129,6 +129,69 @@ const STRINGS = {
         ovenBody:
             "The pide dough rests three times, then bakes for thirty seconds at 380°C. Thin, crisp — the recipe lives in the hands, not on paper.",
     },
+    ar: {
+        open: "مفتوح",
+        est: "تأسس 2000",
+        woodFire: "حطب",
+        tel: "هاتف · 0 (462) 335 00 46",
+        admin: "إدارة",
+        chapter00: "الفصل 00 — القائمة",
+        heroSub:
+            "لحم مفروم بالساطور، فلفل مشوي، رائحة الحطب. من الأناضول إلى مائدتكم.",
+        concept: "المفهوم",
+        pideKebapLahmacun: "بيده · كباب · لحم بعجين",
+        signature: "مميز — 2025",
+        signatureLine: "أضنة، على نار الفحم",
+        todaysChoice: "اختيار الشيف اليوم",
+        exploreMenu: "استكشف القائمة",
+        popular: "الأكثر طلباً",
+        chefsChoice: "اختيار الشيف",
+        search: "بحث في القائمة — Enter",
+        searchPh: "مثال: أضنة، كنافة، بيده...",
+        loading: "جاري تحضير القائمة...",
+        noResults: "لا توجد نتائج",
+        noMatch: (q) => `لم نجد شيئاً لـ "${q}".`,
+        contactVisit: "تواصل — زيارة",
+        letsMeet: "لنجتمع",
+        atTheTable: "على المائدة.",
+        everyDay: "يومياً · 09:00 — 00:30",
+        weekend: "السبت والأحد · 08:00",
+        hours: [
+            { day: "الاثنين", time: "09:00 — 00:30" },
+            { day: "الثلاثاء", time: "09:00 — 00:30" },
+            { day: "الأربعاء", time: "09:00 — 00:30" },
+            { day: "الخميس", time: "09:00 — 00:30" },
+            { day: "الجمعة", time: "09:00 — 00:30" },
+            { day: "السبت", time: "08:00 — 00:30" },
+            { day: "الأحد", time: "08:00 — 00:30" },
+        ],
+        adminPanel: "لوحة الإدارة →",
+        backToMenu: "← العودة للقائمة",
+        shareQr: "مشاركة — QR",
+        qrHeadline: "أحضر القائمة إلى طاولتك.",
+        qrCopy:
+            "امسح الكود بالكاميرا أو انسخ الرابط. القائمة تفتح بسلاسة على جميع الأجهزة.",
+        soup: "ساخن · طبق البداية",
+        pideKick: "فرن حطب · عجين رقيق",
+        kebapKick: "نار الفحم · تحضير يدوي",
+        lahKick: "عنتاب · أسلوب أضنة",
+        tatKick: "بالشيرة · بالحليب",
+        icKick: "بارد · منعش",
+        manifesto: "المانيفستو — 2000",
+        threePrinciples: "ثلاثة",
+        principlesEmph: " مبادئ",
+        weCook: "نطهو بها.",
+        // Manifesto chapters
+        fire: "النار",
+        fireBody:
+            "كل صباح نعدّ الحطب ونجهز الفحم بهدوء. الكباب الحقيقي يحتاج للنار الصحيحة؛ الصبر هو أحد المكونات.",
+        zirh: "الساطور",
+        zirhBody:
+            "اللحم لا يفرم بالآلة، بل يقطع يدوياً بساطورين من حديد. القوام، الحرارة، والملح — هي ذاكرة أضنة.",
+        oven: "الفرن",
+        ovenBody:
+            "عجينة البيده ترتاح ثلاث مرات، وتُخبز لمدة ثلاثين ثانية في حرارة 380 درجة. رقيقة، مقرمشة — الوصفة تعيش في اليد لا على الورق.",
+    },
 };
 
 export function LangProvider({ children }) {
@@ -162,15 +225,35 @@ export const useLang = () => useContext(LangCtx);
  */
 export function pickLocalized(item, field, lang) {
     if (!item) return "";
+    
+    // Arapça seçildiğinde ilgili alanları kontrol et
+    if (lang === "ar") {
+        const ar = item[`${field}_ar`]; 
+        if (ar && String(ar).trim()) return ar;
+    }
+
+    // İngilizce seçildiğinde
     if (lang === "en") {
         const en = item[`${field}_en`];
         if (en && String(en).trim()) return en;
     }
+    
+    // Varsayılan dil (örneğin Türkçe)
     return item[field] || "";
 }
 
 export function pickCategoryName(cat, lang) {
     if (!cat) return "";
-    if (lang === "en" && cat.name_en) return cat.name_en;
+    
+    // Arapça için kontrol
+    if (lang === "ar") {
+        if (cat.name_ar) return cat.name_ar;
+    }
+
+    // İngilizce için kontrol
+    if (lang === "en") {
+        if (cat.name_en) return cat.name_en;
+    }
+    
     return cat.name;
 }
