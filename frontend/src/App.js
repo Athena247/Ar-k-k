@@ -1,4 +1,5 @@
 import React from "react";
+import { Analytics } from '@vercel/analytics/react';
 import "@/App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import DigitalMenu from "@/pages/DigitalMenu";
@@ -11,6 +12,7 @@ export default function App() {
     return (
         <div className="App">
             <LangProvider>
+                <Analytics />
                 <AuthProvider>
                     <BrowserRouter>
                         <Routes>
