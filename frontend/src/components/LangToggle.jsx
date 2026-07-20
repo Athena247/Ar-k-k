@@ -41,6 +41,7 @@ export default function LangToggle({ compact = false, className = "" }) {
         >
             {opt("tr", "TR")}
             {opt("en", "EN")}
+            {opt("ar", "AR")}
         </div>
     );
 }
