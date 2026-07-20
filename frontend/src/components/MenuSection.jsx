@@ -36,6 +36,7 @@ export default function MenuSection({ category, items, chapter }) {
             id={`cat-${category.slug}`}
             data-testid={`section-${category.slug}`}
             className="px-4 md:px-12 lg:px-16 py-16 md:py-24 scroll-mt-24"
+            dir={lang === 'ar' ? 'rtl' : 'ltr'}
         >
             <FadeUp>
                 <div className="grid grid-cols-12 gap-4 md:gap-6 items-end mb-8 md:mb-12">
