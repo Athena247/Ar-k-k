@@ -104,6 +104,8 @@ class LoginRequest(BaseModel):
 class MenuItemCreate(BaseModel):
     name: str
     name_en: Optional[str] = ""
+    name_ar: Optional[str] = ""
+    description_ar: Optional[str] = ""
     description: str
     description_en: Optional[str] = ""
     price: float
@@ -116,6 +118,8 @@ class MenuItemCreate(BaseModel):
 
 
 class MenuItemUpdate(BaseModel):
+    name_ar: Optional[str] = None
+    description_ar: Optional[str] = None
     name: Optional[str] = None
     name_en: Optional[str] = None
     description: Optional[str] = None
@@ -132,7 +136,11 @@ class MenuItemUpdate(BaseModel):
 class MenuItem(BaseModel):
     id: str
     name: str
+    name_en: Optional[str] = None
+    name_ar: Optional[str] = None
     description: str
+    description_en: Optional[str] = None
+    description_ar: Optional[str] = None
     price: float
     image: str
     category: str
@@ -158,40 +166,40 @@ IMG = {
 
 SEED_ITEMS = [
     # Çorbalar
-    {"name": "Mercimek Çorbası", "name_en": "Lentil Soup", "description": "Kırmızı mercimek, taze nane ve limon ile pişirilmiş, ev usulü", "description_en": "Homestyle red lentil soup with fresh mint and a squeeze of lemon", "price": 85, "image": IMG["corba"], "category": "corbalar", "popular": True, "chef_choice": False, "order": 1},
-    {"name": "İşkembe Çorbası", "name_en": "Tripe Soup", "description": "Sarımsak, sirke ve pul biberle servis edilir", "description_en": "Served with garlic, vinegar and red pepper flakes", "price": 120, "image": IMG["corba"], "category": "corbalar", "popular": False, "chef_choice": False, "order": 2},
-    {"name": "Yayla Çorbası", "name_en": "Yogurt & Rice Soup", "description": "Yoğurt, pirinç ve kuru nane ile hazırlanır", "description_en": "Yogurt, rice and dried mint — silky and warming", "price": 95, "image": IMG["corba"], "category": "corbalar", "popular": False, "chef_choice": False, "order": 3},
+    {"name": "Mercimek Çorbası", "name_en": "Lentil Soup", "name_ar": "شوربة العدس", "description": "Kırmızı mercimek, taze nane ve limon ile pişirilmiş, ev usulü", "description_en": "Homestyle red lentil soup with fresh mint and a squeeze of lemon", "description_ar": "شوربة العدس الأحمر المحضرة على الطريقة المنزلية، مع النعناع الطازج وعصرة ليمون", "price": 85, "image": IMG["corba"], "category": "corbalar", "popular": True, "chef_choice": False, "order": 1},
+    {"name": "İşkembe Çorbası", "name_en": "Tripe Soup", "name_ar": "حساء الكرشة", "description": "Sarımsak, sirke ve pul biberle servis edilir", "description_en": "Served with garlic, vinegar and red pepper flakes", "description_ar": "يُقدَّم مع الثوم والخل ورقائق الفلفل الأحمر", "price": 120, "image": IMG["corba"], "category": "corbalar", "popular": False, "chef_choice": False, "order": 2},
+    {"name": "Yayla Çorbası", "name_en": "Yogurt & Rice Soup", "name_ar": "شوربة الزبادي والأرز", "description": "Yoğurt, pirinç ve kuru nane ile hazırlanır", "description_en": "Yogurt, rice and dried mint — silky and warming", "description_ar": "شوربة محضرة من الزبادي والأرز والنعناع المجفف، دافئة ولذيذة", "price": 95, "image": IMG["corba"], "category": "corbalar", "popular": False, "chef_choice": False, "order": 3},
 
     # Pideler
-    {"name": "Kuşbaşılı Pide", "name_en": "Diced Beef Pide", "description": "Elde kesilmiş dana kuşbaşı, közlenmiş biber, kekik", "description_en": "Hand-cut beef cubes, roasted peppers, thyme", "price": 260, "image": IMG["pide"], "category": "pideler", "popular": True, "chef_choice": False, "order": 1},
-    {"name": "Kıymalı Pide", "name_en": "Minced Meat Pide", "description": "Zırh kıyması, soğan, maydanoz ve tereyağı", "description_en": "Hand-chopped mince, onion, parsley and butter", "price": 230, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 2},
-    {"name": "Kaşarlı Pide", "name_en": "Cheese Pide", "description": "Tam yağlı taze kaşar ve tereyağı ile", "description_en": "Full-fat aged kaşar cheese with butter", "price": 210, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 3},
-    {"name": "Karışık Pide", "name_en": "Mixed Pide", "description": "Kuşbaşı, kaşar, sucuk, yumurta — hepsi bir arada", "description_en": "Beef, cheese, sujuk and egg — all together", "price": 285, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": True, "order": 4},
-    {"name": "Kavurmalı Pide", "name_en": "Kavurma Pide", "description": "Ev yapımı dana kavurma, kekik ve tereyağı", "description_en": "House-braised beef kavurma with thyme and butter", "price": 275, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 5},
+    {"name": "Kuşbaşılı Pide", "name_en": "Diced Beef Pide", "name_ar": "فطيرة اللحم المقطع", "description": "Elde kesilmiş dana kuşbaşı, közlenmiş biber, kekik", "description_en": "Hand-cut beef cubes, roasted peppers, thyme", "description_ar": "مكعبات لحم بقري مقطعة يدوياً، مع الفلفل المشوي والزعتر", "price": 260, "image": IMG["pide"], "category": "pideler", "popular": True, "chef_choice": False, "order": 1},
+    {"name": "Kıymalı Pide", "name_en": "Minced Meat Pide", "name_ar": "فطيرة اللحم المفروم", "description": "Zırh kıyması, soğan, maydanoz ve tereyağı", "description_en": "Hand-chopped mince, onion, parsley and butter", "description_ar": "لحم مفروم، بصل، بقدونس وزبدة", "price": 230, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 2},
+    {"name": "Kaşarlı Pide", "name_en": "Cheese Pide", "name_ar": "فطيرة الجبن القشقوان", "description": "Tam yağlı taze kaşar ve tereyağı ile", "description_en": "Full-fat aged kaşar cheese with butter", "description_ar": "جبن قشقوان طازج كامل الدسم مع الزبدة", "price": 210, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 3},
+    {"name": "Karışık Pide", "name_en": "Mixed Pide", "name_ar": "فطيرة مشكلة", "description": "Kuşbaşı, kaşar, sucuk, yumurta — hepsi bir arada", "description_en": "Beef, cheese, sujuk and egg — all together", "description_ar": "مكعبات لحم، جبن، سجق وبيض، كلها في فطيرة واحدة", "price": 285, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": True, "order": 4},
+    {"name": "Kavurmalı Pide", "name_en": "Kavurma Pide", "name_ar": "فطيرة القاورما", "description": "Ev yapımı dana kavurma, kekik ve tereyağı", "description_en": "House-braised beef kavurma with thyme and butter", "description_ar": "لحم قاورما بقري محضر منزلياً، مع الزعتر والزبدة", "price": 275, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 5},
 
     # Kebaplar
-    {"name": "Adana Kebap", "name_en": "Adana Kebab", "description": "Zırh kıyması, közlenmiş biber ve domates, bulgur pilavı ile", "description_en": "Hand-chopped spicy mince, roasted peppers, bulgur pilaf", "price": 340, "image": IMG["kebap"], "category": "kebaplar", "popular": True, "chef_choice": True, "order": 1},
-    {"name": "Urfa Kebap", "name_en": "Urfa Kebab", "description": "Acısız zırh kıyması, közlenmiş sebzeler eşliğinde", "description_en": "Mild hand-chopped mince with roasted vegetables", "price": 340, "image": IMG["kebap"], "category": "kebaplar", "popular": False, "chef_choice": False, "order": 2},
-    {"name": "Beyti Sarma", "name_en": "Beyti Wrap", "description": "Zırh kıyma, lavaş sargı, yoğurt ve domates sosu", "description_en": "Minced meat wrapped in lavash, with yogurt and tomato sauce", "price": 385, "image": IMG["kebap"], "category": "kebaplar", "popular": False, "chef_choice": True, "order": 3},
-    {"name": "Kuzu Şiş", "name_en": "Lamb Skewer", "description": "Marine edilmiş kuzu but, kömür ateşinde", "description_en": "Marinated lamb leg, grilled over charcoal", "price": 420, "image": IMG["kebap"], "category": "kebaplar", "popular": True, "chef_choice": False, "order": 4},
-    {"name": "Tavuk Şiş", "name_en": "Chicken Skewer", "description": "Marine tavuk göğsü, közlenmiş domates ve biber", "description_en": "Marinated chicken breast with roasted tomato and pepper", "price": 285, "image": IMG["kebap"], "category": "kebaplar", "popular": False, "chef_choice": False, "order": 5},
-    {"name": "Ciğer Şiş", "name_en": "Liver Skewer", "description": "Kuzu ciğer, soğan piyaz ve sumak ile", "description_en": "Lamb liver skewers with onion salad and sumac", "price": 310, "image": IMG["kebap"], "category": "kebaplar", "popular": False, "chef_choice": False, "order": 6},
+    {"name": "Adana Kebap", "name_en": "Adana Kebab", "name_ar": "كباب أضنة", "description": "Zırh kıyması, közlenmiş biber ve domates, bulgur pilavı ile", "description_en": "Hand-chopped spicy mince, roasted peppers, bulgur pilaf", "description_ar": "لحم مفروم متبل، فلفل مشوي وطماطم، يقدم مع برغل", "price": 340, "image": IMG["kebap"], "category": "kebaplar", "popular": True, "chef_choice": True, "order": 1},
+    {"name": "Urfa Kebap", "name_en": "Urfa Kebab", "name_ar": "كباب أورفة", "description": "Acısız zırh kıyması, közlenmiş sebzeler eşliğinde", "description_en": "Mild hand-chopped mince with roasted vegetables", "description_ar": "لحم مفروم غير حار، يقدم مع خضار مشوية", "price": 340, "image": IMG["kebap"], "category": "kebaplar", "popular": False, "chef_choice": False, "order": 2},
+    {"name": "Beyti Sarma", "name_en": "Beyti Wrap", "name_ar": "بيتي ملفوف", "description": "Zırh kıyma, lavaş sargı, yoğurt ve domates sosu", "description_en": "Minced meat wrapped in lavash, with yogurt and tomato sauce", "description_ar": "لحم مفروم ملفوف بخبز اللافاش، مع الزبادي وصلصة الطماطم", "price": 385, "image": IMG["kebap"], "category": "kebaplar", "popular": False, "chef_choice": True, "order": 3},
+    {"name": "Kuzu Şiş", "name_en": "Lamb Skewer", "name_ar": "سيخ لحم غنم", "description": "Marine edilmiş kuzu but, kömür ateşinde", "description_en": "Marinated lamb leg, grilled over charcoal", "description_ar": "فخذ غنم متبل، مشوي على الفحم", "price": 420, "image": IMG["kebap"], "category": "kebaplar", "popular": True, "chef_choice": False, "order": 4},
+    {"name": "Tavuk Şiş", "name_en": "Chicken Skewer", "name_ar": "سيخ دجاج", "description": "Marine tavuk göğsü, közlenmiş domates ve biber", "description_en": "Marinated chicken breast with roasted tomato and pepper", "description_ar": "صدر دجاج متبل، مع طماطم وفلفل مشوي", "price": 285, "image": IMG["kebap"], "category": "kebaplar", "popular": False, "chef_choice": False, "order": 5},
+    {"name": "Ciğer Şiş", "name_en": "Liver Skewer", "name_ar": "سيخ كبدة", "description": "Kuzu ciğer, soğan piyaz ve sumak ile", "description_en": "Lamb liver skewers with onion salad and sumac", "description_ar": "كبدة غنم، تقدم مع سلطة البصل والسماق", "price": 310, "image": IMG["kebap"], "category": "kebaplar", "popular": False, "chef_choice": False, "order": 6},
 
     # Lahmacunlar
-    {"name": "Çıtır Lahmacun", "name_en": "Crispy Lahmacun", "description": "İnce hamur, elde çekilmiş kıyma, maydanoz, limon", "description_en": "Thin dough, hand-chopped mince, parsley, lemon", "price": 95, "image": IMG["lahmacun"], "category": "lahmacunlar", "popular": True, "chef_choice": False, "order": 1},
-    {"name": "Antep Usulü Acılı", "name_en": "Spicy Antep Style", "description": "Acılı harç, taze biber, sumak ve maydanoz", "description_en": "Spicy meat topping, fresh pepper, sumac and parsley", "price": 105, "image": IMG["lahmacun"], "category": "lahmacunlar", "popular": False, "chef_choice": True, "order": 2},
-    {"name": "Peynirli Lahmacun", "name_en": "Cheese Lahmacun", "description": "Kaşar ve dil peyniri, taze fesleğen", "description_en": "Kaşar and string cheese, fresh basil", "price": 115, "image": IMG["lahmacun"], "category": "lahmacunlar", "popular": False, "chef_choice": False, "order": 3},
+    {"name": "Çıtır Lahmacun", "name_en": "Crispy Lahmacun", "name_ar": "لحم بعجين مقرمش", "description": "İnce hamur, elde çekilmiş kıyma, maydanoz, limon", "description_en": "Thin dough, hand-chopped mince, parsley, lemon", "description_ar": "عجينة رقيقة، لحم مفروم، بقدونس وليمون", "price": 95, "image": IMG["lahmacun"], "category": "lahmacunlar", "popular": True, "chef_choice": False, "order": 1},
+    {"name": "Antep Usulü Acılı", "name_en": "Spicy Antep Style", "name_ar": "لحم بعجين حار على طريقة عنتاب", "description": "Acılı harç, taze biber, sumak ve maydanoz", "description_en": "Spicy meat topping, fresh pepper, sumac and parsley", "description_ar": "خلطة حارة، فلفل طازج، سماق وبقدونس", "price": 105, "image": IMG["lahmacun"], "category": "lahmacunlar", "popular": False, "chef_choice": True, "order": 2},
+    {"name": "Peynirli Lahmacun", "name_en": "Cheese Lahmacun", "name_ar": "لحم بعجين بالجبن", "description": "Kaşar ve dil peyniri, taze fesleğen", "description_en": "Kaşar and string cheese, fresh basil", "description_ar": "جبن قشقوان وجبن مدخن، ريحان طازج", "price": 115, "image": IMG["lahmacun"], "category": "lahmacunlar", "popular": False, "chef_choice": False, "order": 3},
 
     # Tatlılar
-    {"name": "Fıstıklı Baklava", "name_en": "Pistachio Baklava", "description": "40 kat yufka, taze Antep fıstığı ve tereyağı", "description_en": "40 layers of filo, fresh Antep pistachio and butter", "price": 180, "image": IMG["tatli"], "category": "tatlilar", "popular": True, "chef_choice": True, "order": 1},
-    {"name": "Künefe", "name_en": "Künefe", "description": "Kadayıf, hatay peyniri, şerbet ve fıstık", "description_en": "Shredded pastry, Hatay cheese, syrup and pistachio", "price": 190, "image": IMG["tatli"], "category": "tatlilar", "popular": True, "chef_choice": False, "order": 2},
-    {"name": "Sütlaç", "name_en": "Rice Pudding", "description": "Fırında pişmiş, tarçınlı ev usulü sütlaç", "description_en": "Oven-baked, cinnamon-dusted rice pudding", "price": 110, "image": IMG["tatli"], "category": "tatlilar", "popular": False, "chef_choice": False, "order": 3},
+    {"name": "Fıstıklı Baklava", "name_en": "Pistachio Baklava", "name_ar": "بقلاوة بالفستق", "description": "40 kat yufka, taze Antep fıstığı ve tereyağı", "description_en": "40 layers of filo, fresh Antep pistachio and butter", "description_ar": "40 طبقة من العجين، فستق حلبي طازج وزبدة", "price": 180, "image": IMG["tatli"], "category": "tatlilar", "popular": True, "chef_choice": True, "order": 1},
+    {"name": "Künefe", "name_en": "Künefe", "name_ar": "كنافة", "description": "Kadayıf, hatay peyniri, şerbet ve fıstık", "description_en": "Shredded pastry, Hatay cheese, syrup and pistachio", "description_ar": "عجينة الكنافة، جبن هاتاي، قطر وفستق", "price": 190, "image": IMG["tatli"], "category": "tatlilar", "popular": True, "chef_choice": False, "order": 2},
+    {"name": "Sütlaç", "name_en": "Rice Pudding", "name_ar": "بودنج الأرز (سوتلاج)", "description": "Fırında pişmiş, tarçınlı ev usulü sütlaç", "description_en": "Oven-baked, cinnamon-dusted rice pudding", "description_ar": "بودنج الأرز المخبوز في الفرن، مزين بالقرفة", "price": 110, "image": IMG["tatli"], "category": "tatlilar", "popular": False, "chef_choice": False, "order": 3},
 
     # İçecekler
-    {"name": "Şalgam Suyu", "name_en": "Turnip Juice", "description": "Acılı veya sade, hakiki Adana usulü", "description_en": "Spicy or mild, authentic Adana style", "price": 45, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": False, "order": 1},
-    {"name": "Ayran", "name_en": "Ayran", "description": "Ev yapımı, köpüklü ve serin", "description_en": "House-made yogurt drink, frothy and cool", "price": 40, "image": IMG["icecek"], "category": "icecekler", "popular": True, "chef_choice": False, "order": 2},
-    {"name": "Türk Kahvesi", "name_en": "Turkish Coffee", "description": "Bakır cezvede pişirilmiş, lokum eşliğinde", "description_en": "Brewed in copper cezve, served with Turkish delight", "price": 65, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": True, "order": 3},
-    {"name": "Çay", "name_en": "Tea", "description": "Demlikte pişmiş, ince belli bardakta", "description_en": "Steeped in samovar, served in a tulip glass", "price": 20, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": False, "order": 4},
+    {"name": "Şalgam Suyu", "name_en": "Turnip Juice", "name_ar": "عصير الشلجم", "description": "Acılı veya sade, hakiki Adana usulü", "description_en": "Spicy or mild, authentic Adana style", "description_ar": "حار أو عادي، على طريقة أضنة الأصيلة", "price": 45, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": False, "order": 1},
+    {"name": "Ayran", "name_en": "Ayran", "name_ar": "عيران", "description": "Ev yapımı, köpüklü ve serin", "description_en": "House-made yogurt drink, frothy and cool", "description_ar": "مشروب الزبادي المنزلي، منعش ورغوي", "price": 40, "image": IMG["icecek"], "category": "icecekler", "popular": True, "chef_choice": False, "order": 2},
+    {"name": "Türk Kahvesi", "name_en": "Turkish Coffee", "name_ar": "قهوة تركية", "description": "Bakır cezvede pişirilmiş, lokum eşliğinde", "description_en": "Brewed in copper cezve, served with Turkish delight", "description_ar": "محضرة في دلة نحاسية، تقدم مع راحة الحلقوم", "price": 65, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": True, "order": 3},
+    {"name": "Çay", "name_en": "Tea", "name_ar": "شاي", "description": "Demlikte pişmiş, ince belli bardakta", "description_en": "Steeped in samovar, served in a tulip glass", "description_ar": "شاي مخمر، يقدم في الكأس التقليدي", "price": 20, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": False, "order": 4},
 ]
 
 
@@ -228,8 +236,12 @@ async def seed_admin_and_menu():
             patch = {}
             if not existing_item.get("name_en"):
                 patch["name_en"] = item.get("name_en", "")
+            if not existing_item.get("name_ar"): # AR desteği eklendi
+                patch["name_ar"] = item.get("name_ar", "")
             if not existing_item.get("description_en"):
                 patch["description_en"] = item.get("description_en", "")
+            if not existing_item.get("description_ar"): # AR desteği eklendi
+                patch["description_ar"] = item.get("description_ar", "")
             if patch:
                 await db.menu_items.update_one(
                     {"_id": existing_item["_id"]}, {"$set": patch}
