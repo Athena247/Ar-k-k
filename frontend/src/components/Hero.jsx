@@ -31,16 +31,13 @@ export default function Hero({ onExplore }) {
         return () => clearInterval(iv);
     }, [lang]);
 
-    // Günün şef seçimini API'den çekme
+    // Günün şef seçimini doğrudan Render backend adresinden çekme
     useEffect(() => {
         const fetchSpecial = async () => {
             try {
-                const res = await fetch("/api/menu/items");
+                const res = await fetch("https://ar-k-k.onrender.com/api/menu/items");
                 const data = await res.json();
-                console.log("Menü verileri:", data); // Tarayıcı konsolundan gelen veriyi görmek için
-
                 if (Array.isArray(data) && data.length > 0) {
-                    // Kesinlikle today_special true olanı bul, yoksa chef_choice, o da yoksa ilk ürün
                     const special =
                         data.find((item) => item.today_special === true || item.today_special === "true") ||
                         data.find((item) => item.chef_choice === true) ||
@@ -55,14 +52,14 @@ export default function Hero({ onExplore }) {
     }, []);
 
     const getItemName = (item) => {
-        if (!item) return "";
+        if (!item) return "Adana Kebap";
         if (lang === "en" && item.name_en) return item.name_en;
         if (lang === "ar" && item.name_ar) return item.name_ar;
         return item.name;
     };
 
     const getItemDesc = (item) => {
-        if (!item) return "";
+        if (!item) return "Kömür ateşinde özenle pişirilir.";
         if (lang === "en" && item.description_en) return item.description_en;
         if (lang === "ar" && item.description_ar) return item.description_ar;
         return item.description;
