@@ -139,28 +139,8 @@ class MenuItemUpdate(BaseModel):
     active: Optional[bool] = None
 
 
-class MenuItem(BaseModel):
-    id: str
-    name: str
-    name_en: Optional[str] = None
-    name_ar: Optional[str] = None
-    description: str
-    description_en: Optional[str] = None
-    description_ar: Optional[str] = None
-    price: float
-    image: str
-    category: str
-    popular: bool = False
-    chef_choice: bool = False
-    today_special: bool = False
-    order: int = 0
-    active: bool = True
-    created_at: str
-    updated_at: str
-
-
 # ---------------------------------------------------------------------------
-# Seed data
+# Seed data (Fotoğraflardaki gerçek fiyatlarla güncellendi)
 # ---------------------------------------------------------------------------
 IMG = {
     "kebap": "https://images.pexels.com/photos/17794709/pexels-photo-17794709.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
@@ -206,7 +186,7 @@ SEED_ITEMS = [
     {"name": "Köşk Pizza", "name_en": "Köşk Special Pizza", "name_ar": "بيتزا كوشك", "description": "Köşk Pizza", "description_en": "Köşk Special Pizza", "description_ar": "بيتزا كوشك", "price": 370, "image": IMG["pide"], "category": "pizzalar", "popular": False, "chef_choice": True, "order": 4},
     {"name": "Tavuklu Pizza", "name_en": "Chicken Pizza", "name_ar": "بيتزا الدجاج", "description": "Tavuklu Pizza", "description_en": "Chicken Pizza", "description_ar": "بيتزا الدجاج", "price": 370, "image": IMG["pide"], "category": "pizzalar", "popular": False, "chef_choice": False, "order": 5},
 
-    # --- 4. IZGARALAR ---
+    # --- 4. IZGARALAR (Fotoğraftaki gerçek fiyatlar: Adana 460, Urfa 460, Tavuk Şiş 340, Et Şiş 600 vb.) ---
     {"name": "Adana Kebap", "name_en": "Adana Kebab", "name_ar": "كباب أهنة", "description": "Adana Kebap", "description_en": "Adana Kebab", "description_ar": "كباب أهنة", "price": 460, "image": IMG["kebap"], "category": "izgaralar", "popular": True, "chef_choice": True, "order": 1},
     {"name": "Urfa Kebap", "name_en": "Urfa Kebab", "name_ar": "كباب أورفا", "description": "Urfa Kebap", "description_en": "Urfa Kebab", "description_ar": "كباب أورفا", "price": 460, "image": IMG["kebap"], "category": "izgaralar", "popular": False, "chef_choice": False, "order": 2},
     {"name": "Tavuk Şiş", "name_en": "Chicken Skewer", "name_ar": "شيش دجاج", "description": "Tavuk Şiş", "description_en": "Chicken Skewer", "description_ar": "شيش دجاج", "price": 340, "image": IMG["kebap"], "category": "izgaralar", "popular": False, "chef_choice": False, "order": 3},
@@ -219,7 +199,7 @@ SEED_ITEMS = [
     {"name": "Karışık Kebap 2 Kişilik", "name_en": "Mixed Kebab for 2", "name_ar": "مشاوي مشكلة لشخصن", "description": "Karışık Kebap 2 Kişilik", "description_en": "Mixed Kebab for 2", "description_ar": "مشاوي مشكلة لشخصن", "price": 1750, "image": IMG["kebap"], "category": "izgaralar", "popular": True, "chef_choice": True, "order": 10},
     {"name": "Karışık Kebap 1 Kişilik", "name_en": "Mixed Kebab for 1", "name_ar": "مشاوي مشكلة نشرحس واحد", "description": "Karışık Kebap 1 Kişilik", "description_en": "Mixed Kebab for 1", "description_ar": "مشاوي مشكلة نشرحس واحد", "price": 1335, "image": IMG["kebap"], "category": "izgaralar", "popular": False, "chef_choice": False, "order": 11},
 
-    # --- 5. DÜRÜMLER ---
+    # --- 5. DÜRÜMLER (Fotoğraftaki gerçek fiyatlar: Adana Dürüm 235, Et Şiş Dürüm 305 vb.) ---
     {"name": "Adana Dürüm", "name_en": "Adana Wrap", "name_ar": "لفافة أهنة", "description": "Adana Dürüm", "description_en": "Adana Wrap", "description_ar": "لفافة أهنة", "price": 235, "image": IMG["kebap"], "category": "durumler", "popular": True, "chef_choice": False, "order": 1},
     {"name": "Urfa Dürüm", "name_en": "Urfa Wrap", "name_ar": "دوروم أورفا", "description": "Urfa Dürüm", "description_en": "Urfa Wrap", "description_ar": "دوروم أورفا", "price": 235, "image": IMG["kebap"], "category": "durumler", "popular": False, "chef_choice": False, "order": 2},
     {"name": "Tavuk Şiş Dürüm", "name_en": "Chicken Skewer Wrap", "name_ar": "دوروم شيش دجاج", "description": "Tavuk Şiş Dürüm", "description_en": "Chicken Skewer Wrap", "description_ar": "دوروم شيش دجاج", "price": 175, "image": IMG["kebap"], "category": "durumler", "popular": False, "chef_choice": False, "order": 3},
@@ -234,13 +214,13 @@ SEED_ITEMS = [
     {"name": "Tavuk Kavurma Dürüm", "name_en": "Chicken Kavurma Wrap", "name_ar": "دورسه دجاج", "description": "Tavuk Kavurma Dürüm", "description_en": "Chicken Kavurma Wrap", "description_ar": "دورسه دجاج", "price": 200, "image": IMG["kebap"], "category": "durumler", "popular": False, "chef_choice": False, "order": 12},
     {"name": "Tophane Tavuk Kavurma", "name_en": "Tophane Chicken Kavurma Wrap", "name_ar": "ساورما دجاج في خير نوبجانه", "description": "Tophane Tavuk Kavurma", "description_en": "Tophane Chicken Kavurma Wrap", "description_ar": "ساورما دجاج في خير نوبجانه", "price": 215, "image": IMG["kebap"], "category": "durumler", "popular": False, "chef_choice": True, "order": 13},
 
-    # --- 6. BURGERLER ---
+    # --- 6. BURGERLER (Fotoğraftaki gerçek fiyatlar: Çıtır 320, Cheddarlı 340, Eko 370, Et Burger 440) ---
     {"name": "Çıtır Tavuk Burger", "name_en": "Crispy Chicken Burger", "name_ar": "برغر دجاج مقروش", "description": "Çıtır Tavuk Burger", "description_en": "Crispy Chicken Burger", "description_ar": "برغر دجاج مقروش", "price": 320, "image": IMG["kebap"], "category": "burgerler", "popular": False, "chef_choice": False, "order": 1},
     {"name": "Cheddarlı Tavuk Burger", "name_en": "Cheddar Chicken Burger", "name_ar": "برغر دجاج جسثة شهيد", "description": "Cheddarlı Tavuk Burger", "description_en": "Cheddar Chicken Burger", "description_ar": "برغر دجاج جسثة شهيد", "price": 340, "image": IMG["kebap"], "category": "burgerler", "popular": False, "chef_choice": False, "order": 2},
     {"name": "Eko Burger", "name_en": "Eco Burger", "name_ar": "إيكو برغر", "description": "Eko Burger", "description_en": "Eco Burger", "description_ar": "إيكو برغر", "price": 370, "image": IMG["kebap"], "category": "burgerler", "popular": False, "chef_choice": False, "order": 3},
     {"name": "Et Burger", "name_en": "Beef Burger", "name_ar": "برغر لحم", "description": "Et Burger", "description_en": "Beef Burger", "description_ar": "برغر لحم", "price": 440, "image": IMG["kebap"], "category": "burgerler", "popular": True, "chef_choice": True, "order": 4},
 
-    # --- 7. ÇORBALAR VE YANLAR ---
+    # --- 7. ÇORBALAR VE YANLAR (Fotoğraftaki gerçek fiyatlar) ---
     {"name": "Siizma Merziinak Çorbası", "name_en": "Mercimek Soup", "name_ar": "شوربة مص مصنلة", "description": "Siizma Merziinak Çorbası", "description_en": "Mercimek Soup", "description_ar": "شوربة مص مصنلة", "price": 120, "image": IMG["corba"], "category": "corbalar-yanlar", "popular": False, "chef_choice": False, "order": 1},
     {"name": "Ezogelin Çorbası", "name_en": "Ezogelin Soup", "name_ar": "شوربة إيروقيتين", "description": "Ezogelin Çorbası", "description_en": "Ezogelin Soup", "description_ar": "شوربة إيروقيتين", "price": 120, "image": IMG["corba"], "category": "corbalar-yanlar", "popular": False, "chef_choice": False, "order": 2},
     {"name": "Ezme", "name_en": "Spicy Salad (Ezme)", "name_ar": "إزمه", "description": "Ezme", "description_en": "Spicy Salad (Ezme)", "description_ar": "إزمه", "price": 65, "image": IMG["corba"], "category": "corbalar-yanlar", "popular": False, "chef_choice": False, "order": 3},
@@ -253,11 +233,11 @@ SEED_ITEMS = [
     # --- 8. LAHMACUNLAR ---
     {"name": "Lahmacun", "name_en": "Lahmacun", "name_ar": "لحم بعجين", "description": "Lahmacun", "description_en": "Lahmacun", "description_ar": "لحم بعجين", "price": 140, "image": IMG["lahmacun"], "category": "lahmacunlar", "popular": True, "chef_choice": False, "order": 1},
 
-    # --- 9. TATLILAR ---
+    # --- 9. TATLILAR (Baklava 180, Künefe 190) ---
     {"name": "Fıstıklı Baklava", "name_en": "Pistachio Baklava", "name_ar": "بقلاوة بالفستق", "description": "Fıstıklı Baklava", "description_en": "Pistachio Baklava", "description_ar": "بقلاوة بالفستق", "price": 180, "image": IMG["tatli"], "category": "tatlilar", "popular": True, "chef_choice": True, "order": 1},
     {"name": "Künefe", "name_en": "Künefe", "name_ar": "كنافة", "description": "Künefe", "description_en": "Künefe", "description_ar": "كنافة", "price": 190, "image": IMG["tatli"], "category": "tatlilar", "popular": True, "chef_choice": False, "order": 2},
 
-    # --- 10. İÇECEKLER ---
+    # --- 10. İÇECEKLER (Fotoğraftaki gerçek fiyatlar) ---
     {"name": "Cola", "name_en": "Cola", "name_ar": "كولا", "description": "Cola", "description_en": "Cola", "description_ar": "كولا", "price": 75, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": False, "order": 1},
     {"name": "Fanta", "name_en": "Fanta", "name_ar": "فانتا", "description": "Fanta", "description_en": "Fanta", "description_ar": "فانتا", "price": 75, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": False, "order": 2},
     {"name": "Sprite", "name_en": "Sprite", "name_ar": "سبرايت", "description": "Sprite", "description_en": "Sprite", "description_ar": "سبرايت", "price": 75, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": False, "order": 3},
@@ -306,6 +286,9 @@ async def seed_admin_and_menu():
             })
         else:
             patch = {}
+            # Fiyatların menüye göre güncellenmesini zorunlu tut
+            if existing_item.get("price") != item["price"]:
+                patch["price"] = item["price"]
             if not existing_item.get("name_en"):
                 patch["name_en"] = item.get("name_en", "")
             if not existing_item.get("name_ar"):
@@ -320,6 +303,13 @@ async def seed_admin_and_menu():
                 await db.menu_items.update_one(
                     {"_id": existing_item["_id"]}, {"$set": patch}
                 )
+
+    # Eğer sistemde hiç today_special işaretlenmiş ürün yoksa, ilk ürünü otomatik günün şefi yap (Beyti sorunu kökten çözülür)
+    special_exists = await db.menu_items.find_one({"today_special": True})
+    if not special_exists:
+        first_item = await db.menu_items.find_one({"active": True})
+        if first_item:
+            await db.menu_items.update_one({"_id": first_item["_id"]}, {"$set": {"today_special": True}})
 
 
 # ---------------------------------------------------------------------------
