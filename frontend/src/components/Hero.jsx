@@ -38,8 +38,8 @@ export default function Hero({ onExplore }) {
             .then((data) => {
                 if (Array.isArray(data) && data.length > 0) {
                     const special =
-                        data.find((item) => item.today_special) ||
-                        data.find((item) => item.chef_choice) ||
+                        data.find((item) => item.today_special === true) ||
+                        data.find((item) => item.chef_choice === true) ||
                         data[0];
                     setTodaySpecial(special);
                 }
@@ -48,7 +48,7 @@ export default function Hero({ onExplore }) {
     }, []);
 
     const getItemName = (item) => {
-        if (!item) return "";
+        if (!item) return "Günün Lezzeti";
         if (lang === "en" && item.name_en) return item.name_en;
         if (lang === "ar" && item.name_ar) return item.name_ar;
         return item.name;
@@ -132,7 +132,7 @@ export default function Hero({ onExplore }) {
                 </div>
             </div>
 
-            {/* Sabit (hareket etmeyen) büyük görsel ve detaylar */}
+            {/* Görsel ve Seçilen Ürün Detayları (Üst üste binme sorunu giderildi) */}
             <div className="relative z-10 px-6 md:px-12 lg:px-16 pb-14 md:pb-20 grid grid-cols-12 gap-6 md:gap-10 items-end">
                 <div className="col-span-12 md:col-span-8 relative">
                     <motion.div
@@ -143,24 +143,21 @@ export default function Hero({ onExplore }) {
                             duration: 1.1,
                             ease: [0.22, 1, 0.36, 1],
                         }}
-                        className="frame aspect-[16/10] md:aspect-[16/9] rounded-none overflow-hidden"
+                        className="frame aspect-[16/10] md:aspect-[16/9] rounded-none overflow-hidden bg-bone-2"
                         style={{ borderTop: "1px solid var(--line)" }}
                     >
                         <img
                             src={todaySpecial?.image || DEFAULT_IMG}
-                            alt={getItemName(todaySpecial) || "Günün Özel Lezzeti"}
+                            alt={getItemName(todaySpecial)}
                             className="w-full h-full object-cover"
                             loading="eager"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent pointer-events-none" />
-                        <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6 text-bone">
-                            <p
-                                className="eyebrow"
-                                style={{ color: "#f7f5f0" }}
-                            >
+                        {/* Yazının okunabilirliği için alt kısımda şık bir netlik katmanı */}
+                        <div className="absolute bottom-0 inset-x-0 p-6 bg-gradient-to-t from-black/70 via-black/30 to-transparent text-bone">
+                            <p className="eyebrow text-bone/80 tracking-widest text-xs">
                                 GÜNÜN ÖZELİ
                             </p>
-                            <p className="font-serif italic text-xl md:text-3xl mt-1">
+                            <p className="font-serif italic text-2xl md:text-4xl mt-1 drop-shadow-md">
                                 {getItemName(todaySpecial)}
                             </p>
                         </div>
@@ -175,13 +172,13 @@ export default function Hero({ onExplore }) {
                         className="border-t border-line pt-5"
                     >
                         <p className="eyebrow mb-2">ŞEFIN ÖNERİSİ</p>
-                        <p className="font-serif italic text-2xl md:text-3xl leading-tight">
+                        <p className="font-serif italic text-2xl md:text-3xl leading-tight text-ink">
                             {getItemName(todaySpecial)}
                         </p>
                         <p className="text-sm text-ink-2 mt-2 leading-relaxed">
                             {getItemDesc(todaySpecial)}
                         </p>
-                        <p className="mt-3 font-medium">
+                        <p className="mt-3 font-medium text-ink text-lg">
                             {todaySpecial ? `₺${todaySpecial.price}` : ""}
                         </p>
                     </motion.div>
