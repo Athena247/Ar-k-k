@@ -139,8 +139,14 @@ class MenuItemUpdate(BaseModel):
     active: Optional[bool] = None
 
 
+class SiteSettingsUpdate(BaseModel):
+    hero_image: Optional[str] = None
+    hero_title: Optional[str] = None
+    hero_subtitle: Optional[str] = None
+
+
 # ---------------------------------------------------------------------------
-# Seed data (Fotoğraflardaki gerçek fiyatlarla güncellendi)
+# Seed data
 # ---------------------------------------------------------------------------
 IMG = {
     "kebap": "https://images.pexels.com/photos/17794709/pexels-photo-17794709.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
@@ -153,106 +159,106 @@ IMG = {
 
 SEED_ITEMS = [
     # --- 1. PİDELER ---
-    {"name": "Tavuklu Pide", "name_en": "Chicken Pide", "name_ar": "فطيره دجاج", "description": "Tavuklu Pide", "description_en": "Chicken Pide", "description_ar": "فطيره دجاج", "price": 320, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 1},
-    {"name": "Mantarlı Pide", "name_en": "Mushroom Pide", "name_ar": "فطيره بالمشر", "description": "Mantarlı Pide", "description_en": "Mushroom Pide", "description_ar": "فطيره بالمشر", "price": 320, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 2},
-    {"name": "Tavuk Mantarlı Pide", "name_en": "Chicken & Mushroom Pide", "name_ar": "فطيره دجاج مع المشر", "description": "Tavuk Mantarlı Pide", "description_en": "Chicken & Mushroom Pide", "description_ar": "فطيره دجاج مع المشر", "price": 340, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 3},
-    {"name": "Trabzon Peynirli Pide", "name_en": "Trabzon Cheese Pide", "name_ar": "فطيره طرابزون بالجبن", "description": "Trabzon Peynirli Pide", "description_en": "Trabzon Cheese Pide", "description_ar": "فطيره طرابزون بالجبن", "price": 320, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 4},
-    {"name": "Kaşarlı Peynirli Pide", "name_en": "Kaşar Cheese Pide", "name_ar": "فطيره بالجبن المشكول", "description": "Kaşarlı Peynirli Pide", "description_en": "Kaşar Cheese Pide", "description_ar": "فطيره بالجبن المشكول", "price": 350, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 5},
-    {"name": "Açık Kıymalı Pide", "name_en": "Open Minced Meat Pide", "name_ar": "فطيره مفتوحه باللحم المفروم", "description": "Açık Kıymalı Pide", "description_en": "Open Minced Meat Pide", "description_ar": "فطيره مفتوحه باللحم المفروم", "price": 360, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 6},
-    {"name": "Kaşarlı Sucuklu Pide", "name_en": "Sujuk & Cheese Pide", "name_ar": "فطيره بالسحق والجبن", "description": "Kaşarlı Sucuklu Pide", "description_en": "Sujuk & Cheese Pide", "description_ar": "فطيره بالسحق والجبن", "price": 350, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 7},
-    {"name": "Trabzon Kıymalı Pide", "name_en": "Trabzon Minced Pide", "name_ar": "فطيره طرابزون باللحم المفروم", "description": "Trabzon Kıymalı Pide", "description_en": "Trabzon Minced Pide", "description_ar": "فطيره طرابزون باللحم المفروم", "price": 370, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 8},
-    {"name": "Mevlana Pide", "name_en": "Mevlana Pide", "name_ar": "فطيره مولانا", "description": "Mevlana Pide", "description_en": "Mevlana Pide", "description_ar": "فطيره مولانا", "price": 320, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 9},
-    {"name": "Sürmene Peynirli Pide", "name_en": "Sürmene Cheese Pide", "name_ar": "فطيره سورمسه بالجبن", "description": "Sürmene Peynirli Pide", "description_en": "Sürmene Cheese Pide", "description_ar": "فطيره سورمسه بالجبن", "price": 350, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 10},
-    {"name": "Karışık Pide", "name_en": "Mixed Pide", "name_ar": "فطيره مشكله", "description": "Karışık Pide", "description_en": "Mixed Pide", "description_ar": "فطيره مشكله", "price": 440, "image": IMG["pide"], "category": "pideler", "popular": True, "chef_choice": False, "order": 11},
-    {"name": "Kıymalı Kaşarlı Pide", "name_en": "Minced & Cheese Pide", "name_ar": "فطيره باللحم المفروم والجبن", "description": "Kıymalı Kaşarlı Pide", "description_en": "Minced & Cheese Pide", "description_ar": "فطيره باللحم المفروم والجبن", "price": 380, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 12},
-    {"name": "Kaşarlı Kavurmalı Pide", "name_en": "Kavurma & Cheese Pide", "name_ar": "فطيره مشكله بالجبن", "description": "Kaşarlı Kavurmalı Pide", "description_en": "Kavurma & Cheese Pide", "description_ar": "فطيره مشكله بالجبن", "price": 460, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 13},
-    {"name": "Kuşbaşılı Kaşarlı Pide", "name_en": "Diced Beef & Cheese Pide", "name_ar": "فطيره مكعبات بالجبن", "description": "Kuşbaşılı Kaşarlı Pide", "description_en": "Diced Beef & Cheese Pide", "description_ar": "فطيره مكعبات بالجبن", "price": 420, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 14},
-    {"name": "Kapalı Kavurmalı Pide", "name_en": "Closed Kavurma Pide", "name_ar": "فطيره مسدله بالشمول", "description": "Kapalı Kavurmalı Pide", "description_en": "Closed Kavurma Pide", "description_ar": "فطيره مسدله بالشمول", "price": 500, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 15},
-    {"name": "Kapalı Kıymalı Pide", "name_en": "Closed Minced Pide", "name_ar": "فطيره مغلقه باللحم المفروم", "description": "Kapalı Kıymalı Pide", "description_en": "Closed Minced Pide", "description_ar": "فطيره مغلقه باللحم المفروم", "price": 400, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 16},
-    {"name": "Labneli Pide", "name_en": "Labneh Pide", "name_ar": "فطيره باللبنه", "description": "Labneli Pide", "description_en": "Labneh Pide", "description_ar": "فطيره باللبنه", "price": 420, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 17},
-    {"name": "Zahterli Pide", "name_en": "Thyme Pide", "name_ar": "فطيره الزعتر", "description": "Zahterli Pide", "description_en": "Thyme Pide", "description_ar": "فطيره الزعتر", "price": 350, "image": IMG["pide"], "category": "pideler", "popular": False, "chef_choice": False, "order": 18},
+    {"name": "Tavuklu Pide", "name_en": "Chicken Pide", "name_ar": "فطيره دجاج", "description": "Tavuklu Pide", "description_en": "Chicken Pide", "description_ar": "فطيره دجاج", "price": 320, "image": IMG["pide"], "category": "pideler", "order": 1},
+    {"name": "Mantarlı Pide", "name_en": "Mushroom Pide", "name_ar": "فطيره بالمشر", "description": "Mantarlı Pide", "description_en": "Mushroom Pide", "description_ar": "فطيره بالمشر", "price": 320, "image": IMG["pide"], "category": "pideler", "order": 2},
+    {"name": "Tavuk Mantarlı Pide", "name_en": "Chicken & Mushroom Pide", "name_ar": "فطيره دجاج مع المشر", "description": "Tavuk Mantarlı Pide", "description_en": "Chicken & Mushroom Pide", "description_ar": "فطيره دجاج مع المشر", "price": 340, "image": IMG["pide"], "category": "pideler", "order": 3},
+    {"name": "Trabzon Peynirli Pide", "name_en": "Trabzon Cheese Pide", "name_ar": "فطيره طرابزون بالجبن", "description": "Trabzon Peynirli Pide", "description_en": "Trabzon Cheese Pide", "description_ar": "فطيره طرابزون بالجبن", "price": 320, "image": IMG["pide"], "category": "pideler", "order": 4},
+    {"name": "Kaşarlı Peynirli Pide", "name_en": "Kaşar Cheese Pide", "name_ar": "فطيره بالجبن المشكول", "description": "Kaşarlı Peynirli Pide", "description_en": "Kaşar Cheese Pide", "description_ar": "فطيره بالجبن المشكول", "price": 350, "image": IMG["pide"], "category": "pideler", "order": 5},
+    {"name": "Açık Kıymalı Pide", "name_en": "Open Minced Meat Pide", "name_ar": "فطيره مفتوحه باللحم المفروم", "description": "Açık Kıymalı Pide", "description_en": "Open Minced Meat Pide", "description_ar": "فطيره مفتوحه باللحم المفروم", "price": 360, "image": IMG["pide"], "category": "pideler", "order": 6},
+    {"name": "Kaşarlı Sucuklu Pide", "name_en": "Sujuk & Cheese Pide", "name_ar": "فطيره بالسحق والجبن", "description": "Kaşarlı Sucuklu Pide", "description_en": "Sujuk & Cheese Pide", "description_ar": "فطيره بالسحق والجبن", "price": 350, "image": IMG["pide"], "category": "pideler", "order": 7},
+    {"name": "Trabzon Kıymalı Pide", "name_en": "Trabzon Minced Pide", "name_ar": "فطيره طرابزون باللحم المفروم", "description": "Trabzon Kıymalı Pide", "description_en": "Trabzon Minced Pide", "description_ar": "فطيره طرابزون باللحم المفروم", "price": 370, "image": IMG["pide"], "category": "pideler", "order": 8},
+    {"name": "Mevlana Pide", "name_en": "Mevlana Pide", "name_ar": "فطيره مولانا", "description": "Mevlana Pide", "description_en": "Mevlana Pide", "description_ar": "فطيره مولانا", "price": 320, "image": IMG["pide"], "category": "pideler", "order": 9},
+    {"name": "Sürmene Peynirli Pide", "name_en": "Sürmene Cheese Pide", "name_ar": "فطيره سورمسه بالجبن", "description": "Sürmene Peynirli Pide", "description_en": "Sürmene Cheese Pide", "description_ar": "فطيره سورمسه بالجبن", "price": 350, "image": IMG["pide"], "category": "pideler", "order": 10},
+    {"name": "Karışık Pide", "name_en": "Mixed Pide", "name_ar": "فطيره مشكله", "description": "Karışık Pide", "description_en": "Mixed Pide", "description_ar": "فطيره مشكله", "price": 440, "image": IMG["pide"], "category": "pideler", "popular": True, "order": 11},
+    {"name": "Kıymalı Kaşarlı Pide", "name_en": "Minced & Cheese Pide", "name_ar": "فطيره باللحم المفروم والجبن", "description": "Kıymalı Kaşarlı Pide", "description_en": "Minced & Cheese Pide", "description_ar": "فطيره باللحم المفروم والجبن", "price": 380, "image": IMG["pide"], "category": "pideler", "order": 12},
+    {"name": "Kaşarlı Kavurmalı Pide", "name_en": "Kavurma & Cheese Pide", "name_ar": "فطيره مشكله بالجبن", "description": "Kaşarlı Kavurmalı Pide", "description_en": "Kavurma & Cheese Pide", "description_ar": "فطيره مشكله بالجبن", "price": 460, "image": IMG["pide"], "category": "pideler", "order": 13},
+    {"name": "Kuşbaşılı Kaşarlı Pide", "name_en": "Diced Beef & Cheese Pide", "name_ar": "فطيره مكعبات بالجبن", "description": "Kuşbaşılı Kaşarlı Pide", "description_en": "Diced Beef & Cheese Pide", "description_ar": "فطيره مكعبات بالجبن", "price": 420, "image": IMG["pide"], "category": "pideler", "order": 14},
+    {"name": "Kapalı Kavurmalı Pide", "name_en": "Closed Kavurma Pide", "name_ar": "فطيره مسدله بالشمول", "description": "Kapalı Kavurmalı Pide", "description_en": "Closed Kavurma Pide", "description_ar": "فطيره مسدله بالشمول", "price": 500, "image": IMG["pide"], "category": "pideler", "order": 15},
+    {"name": "Kapalı Kıymalı Pide", "name_en": "Closed Minced Pide", "name_ar": "فطيره مغلقه باللحم المفروم", "description": "Kapalı Kıymalı Pide", "description_en": "Closed Minced Pide", "description_ar": "فطيره مغلقه باللحم المفروم", "price": 400, "image": IMG["pide"], "category": "pideler", "order": 16},
+    {"name": "Labneli Pide", "name_en": "Labneh Pide", "name_ar": "فطيره باللبنه", "description": "Labneli Pide", "description_en": "Labneh Pide", "description_ar": "فطيره باللبنه", "price": 420, "image": IMG["pide"], "category": "pideler", "order": 17},
+    {"name": "Zahterli Pide", "name_en": "Thyme Pide", "name_ar": "فطيره الزعتر", "description": "Zahterli Pide", "description_en": "Thyme Pide", "description_ar": "فطيره الزعتر", "price": 350, "image": IMG["pide"], "category": "pideler", "order": 18},
 
     # --- 2. SOTELER ---
-    {"name": "Kiremitte Kaşarlı Tavuk Sote", "name_en": "Chicken Saute with Cheese in Earthenware", "name_ar": "سوسه دجاج بالجبن في الصحن العفاري", "description": "Kiremitte Kaşarlı Tavuk Sote", "description_en": "Chicken Saute with Cheese in Earthenware", "description_ar": "سوسه دجاج بالجبن في الصحن العفاري", "price": 400, "image": IMG["kebap"], "category": "soteler", "popular": False, "chef_choice": False, "order": 1},
-    {"name": "Kiremitte Kaşarlı Tavuk Mantar Sote", "name_en": "Chicken & Mushroom Saute with Cheese", "name_ar": "سوسه دجاج وفطر بالجبن في الصحن العفاري", "description": "Kiremitte Kaşarlı Tavuk Mantar Sote", "description_en": "Chicken & Mushroom Saute with Cheese", "description_ar": "سوسه دجاج وفطر بالجبن في الصحن العفاري", "price": 420, "image": IMG["kebap"], "category": "soteler", "popular": False, "chef_choice": False, "order": 2},
-    {"name": "Kiremitte Kaşarlı Et Sote", "name_en": "Beef Saute with Cheese in Earthenware", "name_ar": "سوسه لحم بالجبن في الصحن العفاري", "description": "Kiremitte Kaşarlı Et Sote", "description_en": "Beef Saute with Cheese in Earthenware", "description_ar": "سوسه لحم بالجبن في الصحن العفاري", "price": 480, "image": IMG["kebap"], "category": "soteler", "popular": False, "chef_choice": True, "order": 3},
-    {"name": "Kiremitte Kaşarlı Karışık Sote", "name_en": "Mixed Saute with Cheese in Earthenware", "name_ar": "سوسه مشكله بالجبن في الصحن العفاري", "description": "Kiremitte Kaşarlı Karışık Sote", "description_en": "Mixed Saute with Cheese in Earthenware", "description_ar": "سوسه مشكله بالجبن في الصحن العفاري", "price": 440, "image": IMG["kebap"], "category": "soteler", "popular": False, "chef_choice": False, "order": 4},
-    {"name": "Kiremitte Kaşarlı Mantar Sote", "name_en": "Mushroom Saute with Cheese in Earthenware", "name_ar": "سوسه فطر بالجبن في الصحن العفاري", "description": "Kiremitte Kaşarlı Mantar Sote", "description_en": "Mushroom Saute with Cheese in Earthenware", "description_ar": "سوسه فطر بالجبن في الصحن العفاري", "price": 400, "image": IMG["kebap"], "category": "soteler", "popular": False, "chef_choice": False, "order": 5},
+    {"name": "Kiremitte Kaşarlı Tavuk Sote", "name_en": "Chicken Saute with Cheese in Earthenware", "name_ar": "سوسه دجاج بالجبن في الصحن العفاري", "description": "Kiremitte Kaşarlı Tavuk Sote", "description_en": "Chicken Saute with Cheese in Earthenware", "description_ar": "سوسه دجاج بالجبن في الصحن العفاري", "price": 400, "image": IMG["kebap"], "category": "soteler", "order": 1},
+    {"name": "Kiremitte Kaşarlı Tavuk Mantar Sote", "name_en": "Chicken & Mushroom Saute with Cheese", "name_ar": "سوسه دجاج وفطر بالجبن في الصحن العفاري", "description": "Kiremitte Kaşarlı Tavuk Mantar Sote", "description_en": "Chicken & Mushroom Saute with Cheese", "description_ar": "سوسه دجاج وفطر بالجبن في الصحن العفاري", "price": 420, "image": IMG["kebap"], "category": "soteler", "order": 2},
+    {"name": "Kiremitte Kaşarlı Et Sote", "name_en": "Beef Saute with Cheese in Earthenware", "name_ar": "سوسه لحم بالجبن في الصحن العفاري", "description": "Kiremitte Kaşarlı Et Sote", "description_en": "Beef Saute with Cheese in Earthenware", "description_ar": "سوسه لحم بالجبن في الصحن العفاري", "price": 480, "image": IMG["kebap"], "category": "soteler", "chef_choice": True, "order": 3},
+    {"name": "Kiremitte Kaşarlı Karışık Sote", "name_en": "Mixed Saute with Cheese in Earthenware", "name_ar": "سوسه مشكله بالجبن في الصحن العفاري", "description": "Kiremitte Kaşarlı Karışık Sote", "description_en": "Mixed Saute with Cheese in Earthenware", "description_ar": "سوسه مشكله بالجبن في الصحن العفاري", "price": 440, "image": IMG["kebap"], "category": "soteler", "order": 4},
+    {"name": "Kiremitte Kaşarlı Mantar Sote", "name_en": "Mushroom Saute with Cheese in Earthenware", "name_ar": "سوسه فطر بالجبن في الصحن العفاري", "description": "Kiremitte Kaşarlı Mantar Sote", "description_en": "Mushroom Saute with Cheese in Earthenware", "description_ar": "سوسه فطر بالجبن في الصحن العفاري", "price": 400, "image": IMG["kebap"], "category": "soteler", "order": 5},
 
     # --- 3. PİZZALAR ---
-    {"name": "Margarita Pizza", "name_en": "Margarita Pizza", "name_ar": "بيتزا مارغرينا", "description": "Margarita Pizza", "description_en": "Margarita Pizza", "description_ar": "بيتزا مارغرينا", "price": 350, "image": IMG["pide"], "category": "pizzalar", "popular": False, "chef_choice": False, "order": 1},
-    {"name": "Karışık Pizza", "name_en": "Mixed Pizza", "name_ar": "بيتزا مشكله", "description": "Karışık Pizza", "description_en": "Mixed Pizza", "description_ar": "بيتزا مشكله", "price": 370, "image": IMG["pide"], "category": "pizzalar", "popular": True, "chef_choice": False, "order": 2},
-    {"name": "Vejetaryen Pizza", "name_en": "Vegetarian Pizza", "name_ar": "بيتزا سايسه", "description": "Vejetaryen Pizza", "description_en": "Vegetarian Pizza", "description_ar": "بيتزا سايسه", "price": 360, "image": IMG["pide"], "category": "pizzalar", "popular": False, "chef_choice": False, "order": 3},
-    {"name": "Köşk Pizza", "name_en": "Köşk Special Pizza", "name_ar": "بيتزا كوشك", "description": "Köşk Pizza", "description_en": "Köşk Special Pizza", "description_ar": "بيتزا كوشك", "price": 370, "image": IMG["pide"], "category": "pizzalar", "popular": False, "chef_choice": True, "order": 4},
-    {"name": "Tavuklu Pizza", "name_en": "Chicken Pizza", "name_ar": "بيتزا الدجاج", "description": "Tavuklu Pizza", "description_en": "Chicken Pizza", "description_ar": "بيتزا الدجاج", "price": 370, "image": IMG["pide"], "category": "pizzalar", "popular": False, "chef_choice": False, "order": 5},
+    {"name": "Margarita Pizza", "name_en": "Margarita Pizza", "name_ar": "بيتزا مارغرينا", "description": "Margarita Pizza", "description_en": "Margarita Pizza", "description_ar": "بيتزا مارغرينا", "price": 350, "image": IMG["pide"], "category": "pizzalar", "order": 1},
+    {"name": "Karışık Pizza", "name_en": "Mixed Pizza", "name_ar": "بيتزا مشكله", "description": "Karışık Pizza", "description_en": "Mixed Pizza", "description_ar": "بيتزا مشكله", "price": 370, "image": IMG["pide"], "category": "pizzalar", "popular": True, "order": 2},
+    {"name": "Vejetaryen Pizza", "name_en": "Vegetarian Pizza", "name_ar": "بيتزا سايسه", "description": "Vejetaryen Pizza", "description_en": "Vegetarian Pizza", "description_ar": "بيتزا سايسه", "price": 360, "image": IMG["pide"], "category": "pizzalar", "order": 3},
+    {"name": "Köşk Pizza", "name_en": "Köşk Special Pizza", "name_ar": "بيتزا كوشك", "description": "Köşk Pizza", "description_en": "Köşk Special Pizza", "description_ar": "بيتزا كوشك", "price": 370, "image": IMG["pide"], "category": "pizzalar", "chef_choice": True, "order": 4},
+    {"name": "Tavuklu Pizza", "name_en": "Chicken Pizza", "name_ar": "بيتزا الدجاج", "description": "Tavuklu Pizza", "description_en": "Chicken Pizza", "description_ar": "بيتزا الدجاج", "price": 370, "image": IMG["pide"], "category": "pizzalar", "order": 5},
 
-    # --- 4. IZGARALAR (Fotoğraftaki gerçek fiyatlar: Adana 460, Urfa 460, Tavuk Şiş 340, Et Şiş 600 vb.) ---
+    # --- 4. IZGARALAR ---
     {"name": "Adana Kebap", "name_en": "Adana Kebab", "name_ar": "كباب أهنة", "description": "Adana Kebap", "description_en": "Adana Kebab", "description_ar": "كباب أهنة", "price": 460, "image": IMG["kebap"], "category": "izgaralar", "popular": True, "chef_choice": True, "order": 1},
-    {"name": "Urfa Kebap", "name_en": "Urfa Kebab", "name_ar": "كباب أورفا", "description": "Urfa Kebap", "description_en": "Urfa Kebab", "description_ar": "كباب أورفا", "price": 460, "image": IMG["kebap"], "category": "izgaralar", "popular": False, "chef_choice": False, "order": 2},
-    {"name": "Tavuk Şiş", "name_en": "Chicken Skewer", "name_ar": "شيش دجاج", "description": "Tavuk Şiş", "description_en": "Chicken Skewer", "description_ar": "شيش دجاج", "price": 340, "image": IMG["kebap"], "category": "izgaralar", "popular": False, "chef_choice": False, "order": 3},
-    {"name": "Et Şiş", "name_en": "Meat Skewer", "name_ar": "شيش لحم", "description": "Et Şiş", "description_en": "Meat Skewer", "description_ar": "شيش لحم", "price": 600, "image": IMG["kebap"], "category": "izgaralar", "popular": False, "chef_choice": True, "order": 4},
-    {"name": "Ciğer Şiş", "name_en": "Liver Skewer", "name_ar": "شيش كبدة", "description": "Ciğer Şiş", "description_en": "Liver Skewer", "description_ar": "شيش كبدة", "price": 460, "image": IMG["kebap"], "category": "izgaralar", "popular": False, "chef_choice": False, "order": 5},
-    {"name": "Izgara Köfte", "name_en": "Grilled Meatballs", "name_ar": "كفته مشوية", "description": "Izgara Köfte", "description_en": "Grilled Meatballs", "description_ar": "كفته مشوية", "price": 460, "image": IMG["kebap"], "category": "izgaralar", "popular": True, "chef_choice": False, "order": 6},
-    {"name": "Tavuk Kebap", "name_en": "Chicken Kebab", "name_ar": "كياب دجاج", "description": "Tavuk Kebap", "description_en": "Chicken Kebab", "description_ar": "كياب دجاج", "price": 450, "image": IMG["kebap"], "category": "izgaralar", "popular": False, "chef_choice": False, "order": 7},
-    {"name": "Tavuk Kanat", "name_en": "Chicken Wings", "name_ar": "أجنحة دجاج", "description": "Tavuk Kanat", "description_en": "Chicken Wings", "description_ar": "أجنحة دجاج", "price": 380, "image": IMG["kebap"], "category": "izgaralar", "popular": False, "chef_choice": False, "order": 8},
-    {"name": "Tavuk Pirzola", "name_en": "Chicken Chops", "name_ar": "قطعة دجاج مشوية", "description": "Tavuk Pirzola", "description_en": "Chicken Chops", "description_ar": "قطعة دجاج مشوية", "price": 0, "image": IMG["kebap"], "category": "izgaralar", "popular": False, "chef_choice": False, "order": 9},
+    {"name": "Urfa Kebap", "name_en": "Urfa Kebab", "name_ar": "كباب أورفا", "description": "Urfa Kebap", "description_en": "Urfa Kebab", "description_ar": "كباب أورفا", "price": 460, "image": IMG["kebap"], "category": "izgaralar", "order": 2},
+    {"name": "Tavuk Şiş", "name_en": "Chicken Skewer", "name_ar": "شيش دجاج", "description": "Tavuk Şiş", "description_en": "Chicken Skewer", "description_ar": "شيش دجاج", "price": 340, "image": IMG["kebap"], "category": "izgaralar", "order": 3},
+    {"name": "Et Şiş", "name_en": "Meat Skewer", "name_ar": "شيش لحم", "description": "Et Şiş", "description_en": "Meat Skewer", "description_ar": "شيش لحم", "price": 600, "image": IMG["kebap"], "category": "izgaralar", "chef_choice": True, "order": 4},
+    {"name": "Ciğer Şiş", "name_en": "Liver Skewer", "name_ar": "شيش كبدة", "description": "Ciğer Şiş", "description_en": "Liver Skewer", "description_ar": "شيش كبدة", "price": 460, "image": IMG["kebap"], "category": "izgaralar", "order": 5},
+    {"name": "Izgara Köfte", "name_en": "Grilled Meatballs", "name_ar": "كفته مشوية", "description": "Izgara Köfte", "description_en": "Grilled Meatballs", "description_ar": "كفته مشوية", "price": 460, "image": IMG["kebap"], "category": "izgaralar", "popular": True, "order": 6},
+    {"name": "Tavuk Kebap", "name_en": "Chicken Kebab", "name_ar": "كياب دجاج", "description": "Tavuk Kebap", "description_en": "Chicken Kebab", "description_ar": "كياب دجاج", "price": 450, "image": IMG["kebap"], "category": "izgaralar", "order": 7},
+    {"name": "Tavuk Kanat", "name_en": "Chicken Wings", "name_ar": "أجنحة دجاج", "description": "Tavuk Kanat", "description_en": "Chicken Wings", "description_ar": "أجنحة دجاج", "price": 380, "image": IMG["kebap"], "category": "izgaralar", "order": 8},
+    {"name": "Tavuk Pirzola", "name_en": "Chicken Chops", "name_ar": "قطعة دجاج مشوية", "description": "Tavuk Pirzola", "description_en": "Chicken Chops", "description_ar": "قطعة دجاج مشوية", "price": 0, "image": IMG["kebap"], "category": "izgaralar", "order": 9},
     {"name": "Karışık Kebap 2 Kişilik", "name_en": "Mixed Kebab for 2", "name_ar": "مشاوي مشكلة لشخصن", "description": "Karışık Kebap 2 Kişilik", "description_en": "Mixed Kebab for 2", "description_ar": "مشاوي مشكلة لشخصن", "price": 1750, "image": IMG["kebap"], "category": "izgaralar", "popular": True, "chef_choice": True, "order": 10},
-    {"name": "Karışık Kebap 1 Kişilik", "name_en": "Mixed Kebab for 1", "name_ar": "مشاوي مشكلة نشرحس واحد", "description": "Karışık Kebap 1 Kişilik", "description_en": "Mixed Kebab for 1", "description_ar": "مشاوي مشكلة نشرحس واحد", "price": 1335, "image": IMG["kebap"], "category": "izgaralar", "popular": False, "chef_choice": False, "order": 11},
+    {"name": "Karışık Kebap 1 Kişilik", "name_en": "Mixed Kebab for 1", "name_ar": "مشاوي مشكلة نشرحس واحد", "description": "Karışık Kebap 1 Kişilik", "description_en": "Mixed Kebab for 1", "description_ar": "مشاوي مشكلة نشرحس واحد", "price": 1335, "image": IMG["kebap"], "category": "izgaralar", "order": 11},
 
-    # --- 5. DÜRÜMLER (Fotoğraftaki gerçek fiyatlar: Adana Dürüm 235, Et Şiş Dürüm 305 vb.) ---
-    {"name": "Adana Dürüm", "name_en": "Adana Wrap", "name_ar": "لفافة أهنة", "description": "Adana Dürüm", "description_en": "Adana Wrap", "description_ar": "لفافة أهنة", "price": 235, "image": IMG["kebap"], "category": "durumler", "popular": True, "chef_choice": False, "order": 1},
-    {"name": "Urfa Dürüm", "name_en": "Urfa Wrap", "name_ar": "دوروم أورفا", "description": "Urfa Dürüm", "description_en": "Urfa Wrap", "description_ar": "دوروم أورفا", "price": 235, "image": IMG["kebap"], "category": "durumler", "popular": False, "chef_choice": False, "order": 2},
-    {"name": "Tavuk Şiş Dürüm", "name_en": "Chicken Skewer Wrap", "name_ar": "دوروم شيش دجاج", "description": "Tavuk Şiş Dürüm", "description_en": "Chicken Skewer Wrap", "description_ar": "دوروم شيش دجاج", "price": 175, "image": IMG["kebap"], "category": "durumler", "popular": False, "chef_choice": False, "order": 3},
-    {"name": "Et Şiş Dürüm", "name_en": "Meat Skewer Wrap", "name_ar": "دوروم شيش لحم", "description": "Et Şiş Dürüm", "description_en": "Meat Skewer Wrap", "description_ar": "دوروم شيش لحم", "price": 305, "image": IMG["kebap"], "category": "durumler", "popular": False, "chef_choice": False, "order": 4},
-    {"name": "Ciğer Şiş Dürüm", "name_en": "Liver Skewer Wrap", "name_ar": "دوروم شيش كبدة", "description": "Ciğer Şiş Dürüm", "description_en": "Liver Skewer Wrap", "description_ar": "دوروم شيش كبدة", "price": 235, "image": IMG["kebap"], "category": "durumler", "popular": False, "chef_choice": False, "order": 5},
-    {"name": "Tavuk Kebap Dürüm", "name_en": "Chicken Kebab Wrap", "name_ar": "دوروم كباب دجاج", "description": "Tavuk Kebap Dürüm", "description_en": "Chicken Kebab Wrap", "description_ar": "دوروم كباب دجاج", "price": 230, "image": IMG["kebap"], "category": "durumler", "popular": False, "chef_choice": False, "order": 6},
-    {"name": "Köfte Dürüm", "name_en": "Meatball Wrap", "name_ar": "دوروم كفته", "description": "Köfte Dürüm", "description_en": "Meatball Wrap", "description_ar": "دوروم كفته", "price": 270, "image": IMG["kebap"], "category": "durumler", "popular": False, "chef_choice": False, "order": 7},
-    {"name": "Tavuk Pirzola Dürüm", "name_en": "Chicken Chop Wrap", "name_ar": "دپوروم دجاج مشونة", "description": "Tavuk Pirzola Dürüm", "description_en": "Chicken Chop Wrap", "description_ar": "دپوروم دجاج مشونة", "price": 0, "image": IMG["kebap"], "category": "durumler", "popular": False, "chef_choice": False, "order": 8},
-    {"name": "Ekmek Arası Köfte", "name_en": "Meatball in Bread", "name_ar": "ساندويش كفته", "description": "Ekmek Arası Köfte", "description_en": "Meatball in Bread", "description_ar": "ساندويش كفته", "price": 270, "image": IMG["kebap"], "category": "durumler", "popular": False, "chef_choice": False, "order": 9},
-    {"name": "Ekmek Arası Tavuk Pirzola", "name_en": "Chicken Chop in Bread", "name_ar": "ساندويش دجاج مشونة", "description": "Ekmek Arası Tavuk Pirzola", "description_en": "Chicken Chop in Bread", "description_ar": "ساندويش دجاج مشونة", "price": 0, "image": IMG["kebap"], "category": "durumler", "popular": False, "chef_choice": False, "order": 10},
-    {"name": "Ekmek Arası Adana", "name_en": "Adana in Bread", "name_ar": "ساندويش اقنة", "description": "Ekmek Arası Adana", "description_en": "Adana in Bread", "description_ar": "ساندويش اقنة", "price": 270, "image": IMG["kebap"], "category": "durumler", "popular": False, "chef_choice": False, "order": 11},
-    {"name": "Tavuk Kavurma Dürüm", "name_en": "Chicken Kavurma Wrap", "name_ar": "دورسه دجاج", "description": "Tavuk Kavurma Dürüm", "description_en": "Chicken Kavurma Wrap", "description_ar": "دورسه دجاج", "price": 200, "image": IMG["kebap"], "category": "durumler", "popular": False, "chef_choice": False, "order": 12},
-    {"name": "Tophane Tavuk Kavurma", "name_en": "Tophane Chicken Kavurma Wrap", "name_ar": "ساورما دجاج في خير نوبجانه", "description": "Tophane Tavuk Kavurma", "description_en": "Tophane Chicken Kavurma Wrap", "description_ar": "ساورما دجاج في خير نوبجانه", "price": 215, "image": IMG["kebap"], "category": "durumler", "popular": False, "chef_choice": True, "order": 13},
+    # --- 5. DÜRÜMLER ---
+    {"name": "Adana Dürüm", "name_en": "Adana Wrap", "name_ar": "لفافة أهنة", "description": "Adana Dürüm", "description_en": "Adana Wrap", "description_ar": "لفافة أهنة", "price": 235, "image": IMG["kebap"], "category": "durumler", "popular": True, "order": 1},
+    {"name": "Urfa Dürüm", "name_en": "Urfa Wrap", "name_ar": "دوروم أورفا", "description": "Urfa Dürüm", "description_en": "Urfa Wrap", "description_ar": "دوروم أورفا", "price": 235, "image": IMG["kebap"], "category": "durumler", "order": 2},
+    {"name": "Tavuk Şiş Dürüm", "name_en": "Chicken Skewer Wrap", "name_ar": "دوروم شيش دجاج", "description": "Tavuk Şiş Dürüm", "description_en": "Chicken Skewer Wrap", "description_ar": "دوروم شيش دجاج", "price": 175, "image": IMG["kebap"], "category": "durumler", "order": 3},
+    {"name": "Et Şiş Dürüm", "name_en": "Meat Skewer Wrap", "name_ar": "دوروم شيش لحم", "description": "Et Şiş Dürüm", "description_en": "Meat Skewer Wrap", "description_ar": "دوروم شيش لحم", "price": 305, "image": IMG["kebap"], "category": "durumler", "order": 4},
+    {"name": "Ciğer Şiş Dürüm", "name_en": "Liver Skewer Wrap", "name_ar": "دوروم شيش كبدة", "description": "Ciğer Şiş Dürüm", "description_en": "Liver Skewer Wrap", "description_ar": "دوروم شيش كبدة", "price": 235, "image": IMG["kebap"], "category": "durumler", "order": 5},
+    {"name": "Tavuk Kebap Dürüm", "name_en": "Chicken Kebab Wrap", "name_ar": "دوروم كباب دجاج", "description": "Tavuk Kebap Dürüm", "description_en": "Chicken Kebab Wrap", "description_ar": "دوروم كباب دجاج", "price": 230, "image": IMG["kebap"], "category": "durumler", "order": 6},
+    {"name": "Köfte Dürüm", "name_en": "Meatball Wrap", "name_ar": "دوروم كفته", "description": "Köfte Dürüm", "description_en": "Meatball Wrap", "description_ar": "دوروم كفته", "price": 270, "image": IMG["kebap"], "category": "durumler", "order": 7},
+    {"name": "Tavuk Pirzola Dürüm", "name_en": "Chicken Chop Wrap", "name_ar": "دپوروم دجاج مشونة", "description": "Tavuk Pirzola Dürüm", "description_en": "Chicken Chop Wrap", "description_ar": "دپوروم دجاج مشونة", "price": 0, "image": IMG["kebap"], "category": "durumler", "order": 8},
+    {"name": "Ekmek Arası Köfte", "name_en": "Meatball in Bread", "name_ar": "ساندويش كفته", "description": "Ekmek Arası Köfte", "description_en": "Meatball in Bread", "description_ar": "ساندويش كفته", "price": 270, "image": IMG["kebap"], "category": "durumler", "order": 9},
+    {"name": "Ekmek Arası Tavuk Pirzola", "name_en": "Chicken Chop in Bread", "name_ar": "ساندويش دجاج مشونة", "description": "Ekmek Arası Tavuk Pirzola", "description_en": "Chicken Chop in Bread", "description_ar": "ساندويش دجاج مشونة", "price": 0, "image": IMG["kebap"], "category": "durumler", "order": 10},
+    {"name": "Ekmek Arası Adana", "name_en": "Adana in Bread", "name_ar": "ساندويش اقنة", "description": "Ekmek Arası Adana", "description_en": "Adana in Bread", "description_ar": "ساندويش اقنة", "price": 270, "image": IMG["kebap"], "category": "durumler", "order": 11},
+    {"name": "Tavuk Kavurma Dürüm", "name_en": "Chicken Kavurma Wrap", "name_ar": "دورسه دجاج", "description": "Tavuk Kavurma Dürüm", "description_en": "Chicken Kavurma Wrap", "description_ar": "دورسه دجاج", "price": 200, "image": IMG["kebap"], "category": "durumler", "order": 12},
+    {"name": "Tophane Tavuk Kavurma", "name_en": "Tophane Chicken Kavurma Wrap", "name_ar": "ساورما دجاج في خير نوبجانه", "description": "Tophane Tavuk Kavurma", "description_en": "Tophane Chicken Kavurma Wrap", "description_ar": "ساورما دجاج في خير نوبجانه", "price": 215, "image": IMG["kebap"], "category": "durumler", "chef_choice": True, "order": 13},
 
-    # --- 6. BURGERLER (Fotoğraftaki gerçek fiyatlar: Çıtır 320, Cheddarlı 340, Eko 370, Et Burger 440) ---
-    {"name": "Çıtır Tavuk Burger", "name_en": "Crispy Chicken Burger", "name_ar": "برغر دجاج مقروش", "description": "Çıtır Tavuk Burger", "description_en": "Crispy Chicken Burger", "description_ar": "برغر دجاج مقروش", "price": 320, "image": IMG["kebap"], "category": "burgerler", "popular": False, "chef_choice": False, "order": 1},
-    {"name": "Cheddarlı Tavuk Burger", "name_en": "Cheddar Chicken Burger", "name_ar": "برغر دجاج جسثة شهيد", "description": "Cheddarlı Tavuk Burger", "description_en": "Cheddar Chicken Burger", "description_ar": "برغر دجاج جسثة شهيد", "price": 340, "image": IMG["kebap"], "category": "burgerler", "popular": False, "chef_choice": False, "order": 2},
-    {"name": "Eko Burger", "name_en": "Eco Burger", "name_ar": "إيكو برغر", "description": "Eko Burger", "description_en": "Eco Burger", "description_ar": "إيكو برغر", "price": 370, "image": IMG["kebap"], "category": "burgerler", "popular": False, "chef_choice": False, "order": 3},
+    # --- 6. BURGERLER ---
+    {"name": "Çıtır Tavuk Burger", "name_en": "Crispy Chicken Burger", "name_ar": "برغر دجاج مقروش", "description": "Çıtır Tavuk Burger", "description_en": "Crispy Chicken Burger", "description_ar": "برغر دجاج مقروش", "price": 320, "image": IMG["kebap"], "category": "burgerler", "order": 1},
+    {"name": "Cheddarlı Tavuk Burger", "name_en": "Cheddar Chicken Burger", "name_ar": "برغر دجاج جسثة شهيد", "description": "Cheddarlı Tavuk Burger", "description_en": "Cheddar Chicken Burger", "description_ar": "برغر دجاج جسثة شهيد", "price": 340, "image": IMG["kebap"], "category": "burgerler", "order": 2},
+    {"name": "Eko Burger", "name_en": "Eco Burger", "name_ar": "إيكو برغر", "description": "Eko Burger", "description_en": "Eco Burger", "description_ar": "إيكو برغر", "price": 370, "image": IMG["kebap"], "category": "burgerler", "order": 3},
     {"name": "Et Burger", "name_en": "Beef Burger", "name_ar": "برغر لحم", "description": "Et Burger", "description_en": "Beef Burger", "description_ar": "برغر لحم", "price": 440, "image": IMG["kebap"], "category": "burgerler", "popular": True, "chef_choice": True, "order": 4},
 
-    # --- 7. ÇORBALAR VE YANLAR (Fotoğraftaki gerçek fiyatlar) ---
-    {"name": "Siizma Merziinak Çorbası", "name_en": "Mercimek Soup", "name_ar": "شوربة مص مصنلة", "description": "Siizma Merziinak Çorbası", "description_en": "Mercimek Soup", "description_ar": "شوربة مص مصنلة", "price": 120, "image": IMG["corba"], "category": "corbalar-yanlar", "popular": False, "chef_choice": False, "order": 1},
-    {"name": "Ezogelin Çorbası", "name_en": "Ezogelin Soup", "name_ar": "شوربة إيروقيتين", "description": "Ezogelin Çorbası", "description_en": "Ezogelin Soup", "description_ar": "شوربة إيروقيتين", "price": 120, "image": IMG["corba"], "category": "corbalar-yanlar", "popular": False, "chef_choice": False, "order": 2},
-    {"name": "Ezme", "name_en": "Spicy Salad (Ezme)", "name_ar": "إزمه", "description": "Ezme", "description_en": "Spicy Salad (Ezme)", "description_ar": "إزمه", "price": 65, "image": IMG["corba"], "category": "corbalar-yanlar", "popular": False, "chef_choice": False, "order": 3},
-    {"name": "Mevsim Salata", "name_en": "Seasonal Salad", "name_ar": "سلطة الموسم", "description": "Mevsim Salata", "description_en": "Seasonal Salad", "description_ar": "سلطة الموسم", "price": 130, "image": IMG["corba"], "category": "corbalar-yanlar", "popular": False, "chef_choice": False, "order": 4},
-    {"name": "Pilav", "name_en": "Rice Pilaf", "name_ar": "أرز", "description": "Pilav", "description_en": "Rice Pilaf", "description_ar": "أرز", "price": 120, "image": IMG["corba"], "category": "corbalar-yanlar", "popular": False, "chef_choice": False, "order": 5},
-    {"name": "Humus", "name_en": "Hummus", "name_ar": "حمص", "description": "Humus", "description_en": "Hummus", "description_ar": "حمص", "price": 150, "image": IMG["corba"], "category": "corbalar-yanlar", "popular": False, "chef_choice": False, "order": 6},
-    {"name": "Mutebbel", "name_en": "Mutebbel", "name_ar": "منتل", "description": "Mutebbel", "description_en": "Mutebbel", "description_ar": "منتل", "price": 150, "image": IMG["corba"], "category": "corbalar-yanlar", "popular": False, "chef_choice": False, "order": 7},
-    {"name": "Patates Cips", "name_en": "French Fries", "name_ar": "رقائق البطائس", "description": "Patates Cips", "description_en": "French Fries", "description_ar": "رقائق البطائس", "price": 235, "image": IMG["corba"], "category": "corbalar-yanlar", "popular": False, "chef_choice": False, "order": 8},
+    # --- 7. ÇORBALAR VE YANLAR ---
+    {"name": "Siizma Merziinak Çorbası", "name_en": "Mercimek Soup", "name_ar": "شوربة مص مصنلة", "description": "Siizma Merziinak Çorbası", "description_en": "Mercimek Soup", "description_ar": "شوربة مص مصنلة", "price": 120, "image": IMG["corba"], "category": "corbalar-yanlar", "order": 1},
+    {"name": "Ezogelin Çorbası", "name_en": "Ezogelin Soup", "name_ar": "شوربة إيروقيتين", "description": "Ezogelin Çorbası", "description_en": "Ezogelin Soup", "description_ar": "شوربة إيروقيتين", "price": 120, "image": IMG["corba"], "category": "corbalar-yanlar", "order": 2},
+    {"name": "Ezme", "name_en": "Spicy Salad (Ezme)", "name_ar": "إزمه", "description": "Ezme", "description_en": "Spicy Salad (Ezme)", "description_ar": "إزمه", "price": 65, "image": IMG["corba"], "category": "corbalar-yanlar", "order": 3},
+    {"name": "Mevsim Salata", "name_en": "Seasonal Salad", "name_ar": "سلطة الموسم", "description": "Mevsim Salata", "description_en": "Seasonal Salad", "description_ar": "سلطة الموسم", "price": 130, "image": IMG["corba"], "category": "corbalar-yanlar", "order": 4},
+    {"name": "Pilav", "name_en": "Rice Pilaf", "name_ar": "أرز", "description": "Pilav", "description_en": "Rice Pilaf", "description_ar": "أرز", "price": 120, "image": IMG["corba"], "category": "corbalar-yanlar", "order": 5},
+    {"name": "Humus", "name_en": "Hummus", "name_ar": "حمص", "description": "Humus", "description_en": "Hummus", "description_ar": "حمص", "price": 150, "image": IMG["corba"], "category": "corbalar-yanlar", "order": 6},
+    {"name": "Mutebbel", "name_en": "Mutebbel", "name_ar": "منتل", "description": "Mutebbel", "description_en": "Mutebbel", "description_ar": "منتل", "price": 150, "image": IMG["corba"], "category": "corbalar-yanlar", "order": 7},
+    {"name": "Patates Cips", "name_en": "French Fries", "name_ar": "رقائق البطائس", "description": "Patates Cips", "description_en": "French Fries", "description_ar": "رقائق البطائس", "price": 235, "image": IMG["corba"], "category": "corbalar-yanlar", "order": 8},
 
     # --- 8. LAHMACUNLAR ---
-    {"name": "Lahmacun", "name_en": "Lahmacun", "name_ar": "لحم بعجين", "description": "Lahmacun", "description_en": "Lahmacun", "description_ar": "لحم بعجين", "price": 140, "image": IMG["lahmacun"], "category": "lahmacunlar", "popular": True, "chef_choice": False, "order": 1},
+    {"name": "Lahmacun", "name_en": "Lahmacun", "name_ar": "لحم بعجين", "description": "Lahmacun", "description_en": "Lahmacun", "description_ar": "لحم بعجين", "price": 140, "image": IMG["lahmacun"], "category": "lahmacunlar", "popular": True, "order": 1},
 
-    # --- 9. TATLILAR (Baklava 180, Künefe 190) ---
+    # --- 9. TATLILAR ---
     {"name": "Fıstıklı Baklava", "name_en": "Pistachio Baklava", "name_ar": "بقلاوة بالفستق", "description": "Fıstıklı Baklava", "description_en": "Pistachio Baklava", "description_ar": "بقلاوة بالفستق", "price": 180, "image": IMG["tatli"], "category": "tatlilar", "popular": True, "chef_choice": True, "order": 1},
-    {"name": "Künefe", "name_en": "Künefe", "name_ar": "كنافة", "description": "Künefe", "description_en": "Künefe", "description_ar": "كنافة", "price": 190, "image": IMG["tatli"], "category": "tatlilar", "popular": True, "chef_choice": False, "order": 2},
+    {"name": "Künefe", "name_en": "Künefe", "name_ar": "كنافة", "description": "Künefe", "description_en": "Künefe", "description_ar": "كنافة", "price": 190, "image": IMG["tatli"], "category": "tatlilar", "popular": True, "order": 2},
 
-    # --- 10. İÇECEKLER (Fotoğraftaki gerçek fiyatlar) ---
-    {"name": "Cola", "name_en": "Cola", "name_ar": "كولا", "description": "Cola", "description_en": "Cola", "description_ar": "كولا", "price": 75, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": False, "order": 1},
-    {"name": "Fanta", "name_en": "Fanta", "name_ar": "فانتا", "description": "Fanta", "description_en": "Fanta", "description_ar": "فانتا", "price": 75, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": False, "order": 2},
-    {"name": "Sprite", "name_en": "Sprite", "name_ar": "سبرايت", "description": "Sprite", "description_en": "Sprite", "description_ar": "سبرايت", "price": 75, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": False, "order": 3},
-    {"name": "Fusetea", "name_en": "Fusetea", "name_ar": "شاي فستق", "description": "Fusetea", "description_en": "Fusetea", "description_ar": "شاي فستق", "price": 75, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": False, "order": 4},
-    {"name": "Meyve Suyu", "name_en": "Fruit Juice", "name_ar": "عصير فواكه", "description": "Meyve Suyu", "description_en": "Fruit Juice", "description_ar": "عصير فواكه", "price": 75, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": False, "order": 5},
-    {"name": "Şişe Cola", "name_en": "Glass Bottle Cola", "name_ar": "كولا زجاج", "description": "Şişe Cola", "description_en": "Glass Bottle Cola", "description_ar": "كولا زجاج", "price": 75, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": False, "order": 6},
-    {"name": "Ayran", "name_en": "Ayran", "name_ar": "ايران", "description": "Ayran", "description_en": "Ayran", "description_ar": "ايران", "price": 40, "image": IMG["icecek"], "category": "icecekler", "popular": True, "chef_choice": False, "order": 7},
-    {"name": "Şalgam", "name_en": "Turnip Juice", "name_ar": "شالقم", "description": "Şalgam", "description_en": "Turnip Juice", "description_ar": "شالقم", "price": 65, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": False, "order": 8},
-    {"name": "Sıkma Portakal", "name_en": "Fresh Orange Juice", "name_ar": "عصير برتقال طازج", "description": "Sıkma Portakal", "description_en": "Fresh Orange Juice", "description_ar": "عصير برتقال طازج", "price": 200, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": True, "order": 9},
-    {"name": "Limonata", "name_en": "Lemonade", "name_ar": "ليموناده", "description": "Limonata", "description_en": "Lemonade", "description_ar": "ليموناده", "price": 0, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": False, "order": 10},
-    {"name": "Limonlu Soda", "name_en": "Lemon Soda", "name_ar": "صودا ليمون", "description": "Limonlu Soda", "description_en": "Lemon Soda", "description_ar": "صودا ليمون", "price": 45, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": False, "order": 11},
-    {"name": "Soda", "name_en": "Mineral Water", "name_ar": "ماء غازي", "description": "Soda", "description_en": "Mineral Water", "description_ar": "ماء غازي", "price": 45, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": False, "order": 12},
-    {"name": "Şeftali Meyve Suyu", "name_en": "Peach Juice", "name_ar": "عصير خوخ", "description": "Şeftali Meyve Suyu", "description_en": "Peach Juice", "description_ar": "عصير خوخ", "price": 75, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": False, "order": 13},
-    {"name": "Vişneli Meyve Suyu", "name_en": "Cherry Juice", "name_ar": "عصير كرز", "description": "Vişneli Meyve Suyu", "description_en": "Cherry Juice", "description_ar": "عصير كرز", "price": 75, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": False, "order": 14},
-    {"name": "Karışık Meyve Suyu", "name_en": "Mixed Fruit Juice", "name_ar": "عصير فواكه مشكل", "description": "Karışık Meyve Suyu", "description_en": "Mixed Fruit Juice", "description_ar": "عصير فواكه مشكل", "price": 75, "image": IMG["icecek"], "category": "icecekler", "popular": False, "chef_choice": False, "order": 15},
+    # --- 10. İÇECEKLER ---
+    {"name": "Cola", "name_en": "Cola", "name_ar": "كولا", "description": "Cola", "description_en": "Cola", "description_ar": "كولا", "price": 75, "image": IMG["icecek"], "category": "icecekler", "order": 1},
+    {"name": "Fanta", "name_en": "Fanta", "name_ar": "فانتا", "description": "Fanta", "description_en": "Fanta", "description_ar": "فانتا", "price": 75, "image": IMG["icecek"], "category": "icecekler", "order": 2},
+    {"name": "Sprite", "name_en": "Sprite", "name_ar": "سبرايت", "description": "Sprite", "description_en": "Sprite", "description_ar": "سبرايت", "price": 75, "image": IMG["icecek"], "category": "icecekler", "order": 3},
+    {"name": "Fusetea", "name_en": "Fusetea", "name_ar": "شاي فستق", "description": "Fusetea", "description_en": "Fusetea", "description_ar": "شاي فستق", "price": 75, "image": IMG["icecek"], "category": "icecekler", "order": 4},
+    {"name": "Meyve Suyu", "name_en": "Fruit Juice", "name_ar": "عصير فواكه", "description": "Meyve Suyu", "description_en": "Fruit Juice", "description_ar": "عصير فواكه", "price": 75, "image": IMG["icecek"], "category": "icecekler", "order": 5},
+    {"name": "Şişe Cola", "name_en": "Glass Bottle Cola", "name_ar": "كولا زجاج", "description": "Şişe Cola", "description_en": "Glass Bottle Cola", "description_ar": "كولا زجاج", "price": 75, "image": IMG["icecek"], "category": "icecekler", "order": 6},
+    {"name": "Ayran", "name_en": "Ayran", "name_ar": "ايران", "description": "Ayran", "description_en": "Ayran", "description_ar": "ايران", "price": 40, "image": IMG["icecek"], "category": "icecekler", "popular": True, "order": 7},
+    {"name": "Şalgam", "name_en": "Turnip Juice", "name_ar": "شالقم", "description": "Şalgam", "description_en": "Turnip Juice", "description_ar": "شالقم", "price": 65, "image": IMG["icecek"], "category": "icecekler", "order": 8},
+    {"name": "Sıkma Portakal", "name_en": "Fresh Orange Juice", "name_ar": "عصير برتقال طازج", "description": "Sıkma Portakal", "description_en": "Fresh Orange Juice", "description_ar": "عصير برتقال طازج", "price": 200, "image": IMG["icecek"], "category": "icecekler", "chef_choice": True, "order": 9},
+    {"name": "Limonata", "name_en": "Lemonade", "name_ar": "ليموناده", "description": "Limonata", "description_en": "Lemonade", "description_ar": "ليموناده", "price": 0, "image": IMG["icecek"], "category": "icecekler", "order": 10},
+    {"name": "Limonlu Soda", "name_en": "Lemon Soda", "name_ar": "صودا ليمون", "description": "Limonlu Soda", "description_en": "Lemon Soda", "description_ar": "صودا ليمون", "price": 45, "image": IMG["icecek"], "category": "icecekler", "order": 11},
+    {"name": "Soda", "name_en": "Mineral Water", "name_ar": "ماء غازي", "description": "Soda", "description_en": "Mineral Water", "description_ar": "ماء غازي", "price": 45, "image": IMG["icecek"], "category": "icecekler", "order": 12},
+    {"name": "Şeftali Meyve Suyu", "name_en": "Peach Juice", "name_ar": "عصير خوخ", "description": "Şeftali Meyve Suyu", "description_en": "Peach Juice", "description_ar": "عصير خوخ", "price": 75, "image": IMG["icecek"], "category": "icecekler", "order": 13},
+    {"name": "Vişneli Meyve Suyu", "name_en": "Cherry Juice", "name_ar": "عصير كرز", "description": "Vişneli Meyve Suyu", "description_en": "Cherry Juice", "description_ar": "عصير كرز", "price": 75, "image": IMG["icecek"], "category": "icecekler", "order": 14},
+    {"name": "Karışık Meyve Suyu", "name_en": "Mixed Fruit Juice", "name_ar": "عصير فواكه مشكل", "description": "Karışık Meyve Suyu", "description_en": "Mixed Fruit Juice", "description_ar": "عصير فواكه مشكل", "price": 75, "image": IMG["icecek"], "category": "icecekler", "order": 15},
 ]
 
 
@@ -270,6 +276,16 @@ async def seed_admin_and_menu():
     elif not verify_password(admin_pw, existing["password_hash"]):
         await db.users.update_one({"email": admin_email}, {"$set": {"password_hash": hash_password(admin_pw)}})
 
+    # Site ayarları seed (ilk kurulum)
+    existing_settings = await db.settings.find_one({"key": "site_settings"})
+    if not existing_settings:
+        await db.settings.insert_one({
+            "key": "site_settings",
+            "hero_image": "https://images.pexels.com/photos/5779787/pexels-photo-5779787.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1200&w=1600",
+            "hero_title": "Arı Köşk",
+            "hero_subtitle": "Dükkanımızdan Kareler"
+        })
+
     now = datetime.now(timezone.utc).isoformat()
     for item in SEED_ITEMS:
         existing_item = await db.menu_items.find_one(
@@ -286,7 +302,6 @@ async def seed_admin_and_menu():
             })
         else:
             patch = {}
-            # Fiyatların menüye göre güncellenmesini zorunlu tut
             if existing_item.get("price") != item["price"]:
                 patch["price"] = item["price"]
             if not existing_item.get("name_en"):
@@ -304,7 +319,6 @@ async def seed_admin_and_menu():
                     {"_id": existing_item["_id"]}, {"$set": patch}
                 )
 
-    # Eğer sistemde hiç today_special işaretlenmiş ürün yoksa, ilk ürünü otomatik günün şefi yap (Beyti sorunu kökten çözülür)
     special_exists = await db.menu_items.find_one({"today_special": True})
     if not special_exists:
         first_item = await db.menu_items.find_one({"active": True})
@@ -330,6 +344,18 @@ async def list_items():
     cursor = db.menu_items.find({"active": True}, {"_id": 0}).sort([("today_special", -1), ("category", 1), ("order", 1)])
     items = await cursor.to_list(1000)
     return items
+
+
+@api.get("/settings")
+async def get_settings():
+    settings = await db.settings.find_one({"key": "site_settings"}, {"_id": 0})
+    if not settings:
+        return {
+            "hero_image": "https://images.pexels.com/photos/5779787/pexels-photo-5779787.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1200&w=1600",
+            "hero_title": "Arı Köşk",
+            "hero_subtitle": "Dükkanımızdan Kareler"
+        }
+    return settings
 
 
 # ---------------------------------------------------------------------------
@@ -366,7 +392,7 @@ async def me(user=Depends(get_current_admin)):
 
 
 # ---------------------------------------------------------------------------
-# Routes: admin menu CRUD
+# Routes: admin menu & settings CRUD
 # ---------------------------------------------------------------------------
 @api.get("/admin/menu/items")
 async def admin_list_items(user=Depends(get_current_admin)):
@@ -396,11 +422,8 @@ async def admin_update_item(item_id: str, payload: MenuItemUpdate, user=Depends(
     update = {k: v for k, v in payload.model_dump().items() if v is not None}
     if not update:
         raise HTTPException(status_code=400, detail="No fields to update")
-    
-    # Eğer bu ürün günün şefi seçildiyse, DİĞER TÜM ÜRÜNLERİN today_special değerini kesinlikle false yap
     if update.get("today_special") is True:
-        await db.menu_items.update_many({"id": {"$ne": item_id}}, {"$set": {"today_special": False}})
-        
+        await db.menu_items.update_many({}, {"$set": {"today_special": False}})
     update["updated_at"] = datetime.now(timezone.utc).isoformat()
     result = await db.menu_items.update_one({"id": item_id}, {"$set": update})
     if result.matched_count == 0:
@@ -415,6 +438,17 @@ async def admin_delete_item(item_id: str, user=Depends(get_current_admin)):
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Item not found")
     return {"ok": True}
+
+
+@api.put("/admin/settings")
+async def update_settings(payload: SiteSettingsUpdate, user=Depends(get_current_admin)):
+    update_data = {k: v for k, v in payload.model_dump().items() if v is not None}
+    await db.settings.update_one(
+        {"key": "site_settings"},
+        {"$set": update_data},
+        upsert=True
+    )
+    return {"ok": True, **update_data}
 
 
 # ---------------------------------------------------------------------------
