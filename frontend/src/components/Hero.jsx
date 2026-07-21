@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { MaskedLine } from "./Reveal";
 import { ArrowDown } from "lucide-react";
 import { useLang } from "@/context/LangContext";
@@ -9,9 +9,6 @@ const DEFAULT_IMG =
     "https://images.pexels.com/photos/5779787/pexels-photo-5779787.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1200&w=1600";
 
 export default function Hero({ onExplore }) {
-    const { scrollY } = useScroll();
-    const y = useTransform(scrollY, [0, 800], [0, 180]);
-    const scale = useTransform(scrollY, [0, 800], [1, 1.08]);
     const { t, lang } = useLang();
 
     const [time, setTime] = useState("");
@@ -121,7 +118,7 @@ export default function Hero({ onExplore }) {
                             <MaskedLine delay={0.05}>Arı</MaskedLine>{" "}
                             <MaskedLine
                                 delay={0.15}
-                                className="italic text-ember"
+                                className="text-ember italic"
                             >
                                 Köşk
                             </MaskedLine>
@@ -135,7 +132,7 @@ export default function Hero({ onExplore }) {
                 </div>
             </div>
 
-            {/* Big editorial image with parallax */}
+            {/* Sabit (hareket etmeyen) büyük görsel ve detaylar */}
             <div className="relative z-10 px-6 md:px-12 lg:px-16 pb-14 md:pb-20 grid grid-cols-12 gap-6 md:gap-10 items-end">
                 <div className="col-span-12 md:col-span-8 relative">
                     <motion.div
@@ -146,14 +143,13 @@ export default function Hero({ onExplore }) {
                             duration: 1.1,
                             ease: [0.22, 1, 0.36, 1],
                         }}
-                        className="frame aspect-[16/10] md:aspect-[16/9] rounded-none"
+                        className="frame aspect-[16/10] md:aspect-[16/9] rounded-none overflow-hidden"
                         style={{ borderTop: "1px solid var(--line)" }}
                     >
-                        <motion.img
+                        <img
                             src={todaySpecial?.image || DEFAULT_IMG}
-                            alt="Odun ateşinde kebap"
+                            alt={getItemName(todaySpecial) || "Günün Özel Lezzeti"}
                             className="w-full h-full object-cover"
-                            style={{ y, scale }}
                             loading="eager"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent pointer-events-none" />
