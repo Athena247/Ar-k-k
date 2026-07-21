@@ -11,11 +11,11 @@ const STRINGS = {
         admin: "Yönetim",
         chapter00: "Bölüm 00 — Menü",
         heroSub:
-            "Zırh kıyması, közlenmiş biber, odun kokusu. Anadolu'dan sofranıza.",
+            "Odun ateşi, taze malzemeler ve geleneksel reçetelerle hazırlanan lezzetler.",
         concept: "Konsept",
         pideKebapLahmacun: "Pide · Kebap · Lahmacun",
-        signature: "Signature — 2025",
-        signatureLine: "Adana, kömür üstünde",
+        signature: "Şefin Seçimi",
+        signatureLine: "Günün Özel Lezzeti",
         todaysChoice: "Bugünün Şef Seçimi",
         exploreMenu: "Menüyü keşfet",
         popular: "Popüler",
@@ -55,7 +55,6 @@ const STRINGS = {
         threePrinciples: "Üç",
         principlesEmph: " ilkeyle",
         weCook: "pişiriyoruz.",
-        // Manifesto chapters
         fire: "Ateş",
         fireBody:
             "Her sabah kütükler kesilir, kömür usulca hazırlanır. Kebap ancak doğru ateşle olur; sabır bir malzemedir.",
@@ -74,11 +73,11 @@ const STRINGS = {
         admin: "Admin",
         chapter00: "Chapter 00 — Menu",
         heroSub:
-            "Hand-chopped mince, charred peppers, wood smoke. Anatolia, to your table.",
+            "Flavors prepared with wood fire, fresh ingredients, and traditional recipes.",
         concept: "Concept",
         pideKebapLahmacun: "Pide · Kebab · Lahmacun",
-        signature: "Signature — 2025",
-        signatureLine: "Adana, over the coals",
+        signature: "Chef's Pick",
+        signatureLine: "Today's Special Flavor",
         todaysChoice: "Today's Chef Pick",
         exploreMenu: "Explore the menu",
         popular: "Popular",
@@ -118,7 +117,6 @@ const STRINGS = {
         threePrinciples: "Three",
         principlesEmph: " principles",
         weCook: "we cook by.",
-        // Manifesto chapters
         fire: "Fire",
         fireBody:
             "Every morning the logs are cut, the coals are prepared quietly. A proper kebab needs the right fire; patience is an ingredient.",
@@ -136,12 +134,11 @@ const STRINGS = {
         tel: "هاتف · 0 (462) 335 00 46",
         admin: "إدارة",
         chapter00: "الفصل 00 — القائمة",
-        heroSub:
-            "لحم مفروم بالساطور، فلفل مشوي، رائحة الحطب. من الأناضول إلى مائدتكم.",
+        heroSub: "نكهات محضرة على النار وبمكونات طازجة ووصفات تقليدية.",
         concept: "المفهوم",
         pideKebapLahmacun: "بيده · كباب · لحم بعجين",
-        signature: "مميز — 2025",
-        signatureLine: "أضنة، على نار الفحم",
+        signature: "اختيار الشيف",
+        signatureLine: "نكهة اليوم المميزة",
         todaysChoice: "اختيار الشيف اليوم",
         exploreMenu: "استكشف القائمة",
         popular: "الأكثر طلباً",
@@ -181,7 +178,6 @@ const STRINGS = {
         threePrinciples: "ثلاثة",
         principlesEmph: " مبادئ",
         weCook: "نطهو بها.",
-        // Manifesto chapters
         fire: "النار",
         fireBody:
             "كل صباح نعدّ الحطب ونجهز الفحم بهدوء. الكباب الحقيقي يحتاج للنار الصحيحة؛ الصبر هو أحد المكونات.",
@@ -219,38 +215,29 @@ export function LangProvider({ children }) {
 
 export const useLang = () => useContext(LangCtx);
 
-/**
- * Pick the localized field of an item.
- * Falls back to the TR field when the EN one is missing.
- */
 export function pickLocalized(item, field, lang) {
     if (!item) return "";
     
-    // Arapça seçildiğinde ilgili alanları kontrol et
     if (lang === "ar") {
         const ar = item[`${field}_ar`]; 
         if (ar && String(ar).trim()) return ar;
     }
 
-    // İngilizce seçildiğinde
     if (lang === "en") {
         const en = item[`${field}_en`];
         if (en && String(en).trim()) return en;
     }
     
-    // Varsayılan dil (örneğin Türkçe)
     return item[field] || "";
 }
 
 export function pickCategoryName(cat, lang) {
     if (!cat) return "";
     
-    // Arapça için kontrol
     if (lang === "ar") {
         if (cat.name_ar) return cat.name_ar;
     }
 
-    // İngilizce için kontrol
     if (lang === "en") {
         if (cat.name_en) return cat.name_en;
     }
