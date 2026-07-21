@@ -5,7 +5,7 @@ import { ArrowDown } from "lucide-react";
 import { useLang } from "@/context/LangContext";
 import LangToggle from "./LangToggle";
 
-const HERO_IMG =
+const DEFAULT_IMG =
     "https://images.pexels.com/photos/5779787/pexels-photo-5779787.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1200&w=1600";
 
 export default function Hero({ onExplore }) {
@@ -39,8 +39,7 @@ export default function Hero({ onExplore }) {
         fetch("/api/menu/items")
             .then((res) => res.json())
             .then((data) => {
-                if (Array.isArray(data)) {
-                    // today_special true olanı bul, yoksa chef_choice veya ilk ürünü seç
+                if (Array.isArray(data) && data.length > 0) {
                     const special =
                         data.find((item) => item.today_special) ||
                         data.find((item) => item.chef_choice) ||
@@ -51,19 +50,15 @@ export default function Hero({ onExplore }) {
             .catch((err) => console.error("Error fetching today's special:", err));
     }, []);
 
-    // Dil bazlı isim ve açıklama seçimi
     const getItemName = (item) => {
-        if (!item) return lang === "en" ? "Beyti Wrap" : "Beyti Sarma";
+        if (!item) return "";
         if (lang === "en" && item.name_en) return item.name_en;
         if (lang === "ar" && item.name_ar) return item.name_ar;
         return item.name;
     };
 
     const getItemDesc = (item) => {
-        if (!item)
-            return lang === "en"
-                ? "Minced meat wrapped in lavash, with yogurt and tomato sauce."
-                : "Zırh kıyma, lavaş sargı, yoğurt ve közlenmiş domates.";
+        if (!item) return "";
         if (lang === "en" && item.description_en) return item.description_en;
         if (lang === "ar" && item.description_ar) return item.description_ar;
         return item.description;
@@ -99,7 +94,7 @@ export default function Hero({ onExplore }) {
                 </div>
             </div>
 
-            {/* Hero content — asymmetric editorial layout */}
+            {/* Hero content */}
             <div className="relative z-10 px-6 md:px-12 lg:px-16 pt-16 md:pt-24 pb-8 md:pb-14 grid grid-cols-12 gap-6 md:gap-10">
                 <div className="col-span-12 md:col-span-3 flex md:flex-col justify-between md:justify-start md:pt-8 gap-4">
                     <div>
@@ -155,7 +150,7 @@ export default function Hero({ onExplore }) {
                         style={{ borderTop: "1px solid var(--line)" }}
                     >
                         <motion.img
-                            src={todaySpecial?.image || HERO_IMG}
+                            src={todaySpecial?.image || DEFAULT_IMG}
                             alt="Odun ateşinde kebap"
                             className="w-full h-full object-cover"
                             style={{ y, scale }}
@@ -167,10 +162,10 @@ export default function Hero({ onExplore }) {
                                 className="eyebrow"
                                 style={{ color: "#f7f5f0" }}
                             >
-                                {t.signature}
+                                GÜNÜN ÖZELİ
                             </p>
                             <p className="font-serif italic text-xl md:text-3xl mt-1">
-                                {t.signatureLine}
+                                {getItemName(todaySpecial)}
                             </p>
                         </div>
                     </motion.div>
@@ -183,7 +178,7 @@ export default function Hero({ onExplore }) {
                         transition={{ delay: 1.0, duration: 0.9 }}
                         className="border-t border-line pt-5"
                     >
-                        <p className="eyebrow mb-2">{t.todaysChoice}</p>
+                        <p className="eyebrow mb-2">ŞEFIN ÖNERİSİ</p>
                         <p className="font-serif italic text-2xl md:text-3xl leading-tight">
                             {getItemName(todaySpecial)}
                         </p>
@@ -191,7 +186,7 @@ export default function Hero({ onExplore }) {
                             {getItemDesc(todaySpecial)}
                         </p>
                         <p className="mt-3 font-medium">
-                            ₺{todaySpecial ? todaySpecial.price : 385}
+                            {todaySpecial ? `₺${todaySpecial.price}` : ""}
                         </p>
                     </motion.div>
 
