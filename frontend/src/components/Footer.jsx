@@ -86,6 +86,7 @@ export default function Footer() {
 
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mt-10">
                 <div className="flex items-center gap-6">
+                    {/* Instagram Linki */}
                     <a
                         href="https://www.instagram.com/kosk.pide/?hl=tr"
                         target="_blank"
@@ -96,11 +97,30 @@ export default function Footer() {
                     >
                         <Instagram className="w-5 h-5" strokeWidth={1.5} />
                     </a>
+
+                    {/* Yemeksepeti Linki ve Logosu */}
+                    <a
+                        href="https://www.yemeksepeti.com/restaurant/s9on/ari-kosk-pide-and-kebap-and-lahmacun"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Yemeksepeti"
+                        data-testid="social-yemeksepeti"
+                        className="hover:text-ember-2 transition-colors flex items-center"
+                        title="Yemeksepeti'nde Sipariş Ver"
+                    >
+                        <svg
+                            className="w-5 h-5 fill-current"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.02-.42 1.95-1.07 2.62z" />
+                        </svg>
+                    </a>
                 </div>
 
                 <p className="eyebrow" style={{ color: "#f7f5f0aa" }}>
                     © {new Date().getFullYear()} Arı Köşk — Pide · Kebap ·
-                    Lahmacun
+                    Lahmacun[cite: 2]
                 </p>
 
                 <a
