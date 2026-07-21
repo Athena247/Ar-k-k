@@ -555,6 +555,21 @@ export default function AdminDashboard() {
                                     />
                                     <span className="text-sm">Şefin Seçimi</span>
                                 </label>
+                                <label className="flex items-center gap-3 cursor-pointer">
+                                    <input
+                                        data-testid="form-today-special"
+                                        type="checkbox"
+                                        checked={!!editing.today_special}
+                                        onChange={(e) =>
+                                            setEditing({
+                                                ...editing,
+                                                today_special: e.target.checked,
+                                            })
+                                        }
+                                        className="w-4 h-4 accent-ember"
+                                    />
+                                    <span className="text-sm">Günün Şef Seçimi (Ana Banner)</span>
+                                </label>
                             </div>
 
                             <div className="flex items-center gap-3 mt-8">
