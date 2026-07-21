@@ -152,6 +152,7 @@ class MenuItem(BaseModel):
     category: str
     popular: bool = False
     chef_choice: bool = False
+    today_special: bool = False
     order: int = 0
     active: bool = True
     created_at: str
@@ -276,7 +277,6 @@ SEED_ITEMS = [
 
 
 async def seed_admin_and_menu():
-    # Admin
     admin_email = os.environ["ADMIN_EMAIL"]
     admin_pw = os.environ["ADMIN_PASSWORD"]
     existing = await db.users.find_one({"email": admin_email})
@@ -290,7 +290,6 @@ async def seed_admin_and_menu():
     elif not verify_password(admin_pw, existing["password_hash"]):
         await db.users.update_one({"email": admin_email}, {"$set": {"password_hash": hash_password(admin_pw)}})
 
-    # Menu items — upsert each seed item by (name, category); backfill missing EN fields
     now = datetime.now(timezone.utc).isoformat()
     for item in SEED_ITEMS:
         existing_item = await db.menu_items.find_one(
@@ -300,6 +299,7 @@ async def seed_admin_and_menu():
             await db.menu_items.insert_one({
                 "id": str(uuid.uuid4()),
                 **item,
+                "today_special": False,
                 "active": True,
                 "created_at": now,
                 "updated_at": now,
@@ -308,12 +308,14 @@ async def seed_admin_and_menu():
             patch = {}
             if not existing_item.get("name_en"):
                 patch["name_en"] = item.get("name_en", "")
-            if not existing_item.get("name_ar"): # AR desteği eklendi
+            if not existing_item.get("name_ar"):
                 patch["name_ar"] = item.get("name_ar", "")
             if not existing_item.get("description_en"):
                 patch["description_en"] = item.get("description_en", "")
-            if not existing_item.get("description_ar"): # AR desteği eklendi
+            if not existing_item.get("description_ar"):
                 patch["description_ar"] = item.get("description_ar", "")
+            if "today_special" not in existing_item:
+                patch["today_special"] = False
             if patch:
                 await db.menu_items.update_one(
                     {"_id": existing_item["_id"]}, {"$set": patch}
@@ -335,7 +337,7 @@ async def get_categories():
 
 @api.get("/menu/items")
 async def list_items():
-    cursor = db.menu_items.find({"active": True}, {"_id": 0}).sort([("category", 1), ("order", 1)])
+    cursor = db.menu_items.find({"active": True}, {"_id": 0}).sort([("today_special", -1), ("category", 1), ("order", 1)])
     items = await cursor.to_list(1000)
     return items
 
@@ -405,7 +407,7 @@ async def admin_update_item(item_id: str, payload: MenuItemUpdate, user=Depends(
     if not update:
         raise HTTPException(status_code=400, detail="No fields to update")
     if update.get("today_special") is True:
-        await db.menu_items.update_many({"id": {"$ne": item_id}}, {"$set": {"today_special": False}})
+        await db.menu_items.update_many({}, {"$set": {"today_special": False}})
     update["updated_at"] = datetime.now(timezone.utc).isoformat()
     result = await db.menu_items.update_one({"id": item_id}, {"$set": update})
     if result.matched_count == 0:
