@@ -33,9 +33,10 @@ export default function Hero({ onExplore }) {
 
     // Günün şef seçimini API'den çekme
     useEffect(() => {
-        fetch("/api/menu/items")
-            .then((res) => res.json())
-            .then((data) => {
+        const fetchSpecial = async () => {
+            try {
+                const res = await fetch("/api/menu/items");
+                const data = await res.json();
                 if (Array.isArray(data) && data.length > 0) {
                     const special =
                         data.find((item) => item.today_special === true) ||
@@ -43,19 +44,22 @@ export default function Hero({ onExplore }) {
                         data[0];
                     setTodaySpecial(special);
                 }
-            })
-            .catch((err) => console.error("Error fetching today's special:", err));
+            } catch (err) {
+                console.error("Error fetching special item:", err);
+            }
+        };
+        fetchSpecial();
     }, []);
 
     const getItemName = (item) => {
-        if (!item) return "Günün Lezzeti";
+        if (!item) return "Adana Kebap";
         if (lang === "en" && item.name_en) return item.name_en;
         if (lang === "ar" && item.name_ar) return item.name_ar;
         return item.name;
     };
 
     const getItemDesc = (item) => {
-        if (!item) return "";
+        if (!item) return "Kömür ateşinde özenle pişirilir.";
         if (lang === "en" && item.description_en) return item.description_en;
         if (lang === "ar" && item.description_ar) return item.description_ar;
         return item.description;
@@ -132,7 +136,7 @@ export default function Hero({ onExplore }) {
                 </div>
             </div>
 
-            {/* Görsel ve Seçilen Ürün Detayları (Üst üste binme sorunu giderildi) */}
+            {/* Sabit görsel ve dinamik ürün bilgileri */}
             <div className="relative z-10 px-6 md:px-12 lg:px-16 pb-14 md:pb-20 grid grid-cols-12 gap-6 md:gap-10 items-end">
                 <div className="col-span-12 md:col-span-8 relative">
                     <motion.div
@@ -152,7 +156,6 @@ export default function Hero({ onExplore }) {
                             className="w-full h-full object-cover"
                             loading="eager"
                         />
-                        {/* Yazının okunabilirliği için alt kısımda şık bir netlik katmanı */}
                         <div className="absolute bottom-0 inset-x-0 p-6 bg-gradient-to-t from-black/70 via-black/30 to-transparent text-bone">
                             <p className="eyebrow text-bone/80 tracking-widest text-xs">
                                 GÜNÜN ÖZELİ
@@ -179,7 +182,7 @@ export default function Hero({ onExplore }) {
                             {getItemDesc(todaySpecial)}
                         </p>
                         <p className="mt-3 font-medium text-ink text-lg">
-                            {todaySpecial ? `₺${todaySpecial.price}` : ""}
+                            {todaySpecial ? `₺${todaySpecial.price}` : "₺460"}
                         </p>
                     </motion.div>
 
