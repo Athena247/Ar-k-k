@@ -98,7 +98,7 @@ export default function Footer() {
                         <Instagram className="w-5 h-5" strokeWidth={1.5} />
                     </a>
 
-                    {/* Yemeksepeti Linki ve Logosu */}
+                    {/* Adam Akıllı Yemeksepeti Logosu ve Linki */}
                     <a
                         href="https://www.yemeksepeti.com/restaurant/s9on/ari-kosk-pide-and-kebap-and-lahmacun"
                         target="_blank"
@@ -113,7 +113,7 @@ export default function Footer() {
                             viewBox="0 0 24 24"
                             xmlns="http://www.w3.org/2000/svg"
                         >
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.02-.42 1.95-1.07 2.62z" />
+                            <path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0-2-.9-2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h2v2h2V8h6v2h2V8h2v12zm-9-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm0 4c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z" />
                         </svg>
                     </a>
                 </div>
