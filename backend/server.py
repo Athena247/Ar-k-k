@@ -396,8 +396,11 @@ async def admin_update_item(item_id: str, payload: MenuItemUpdate, user=Depends(
     update = {k: v for k, v in payload.model_dump().items() if v is not None}
     if not update:
         raise HTTPException(status_code=400, detail="No fields to update")
+    
+    # Eğer bu ürün günün şefi seçildiyse, DİĞER TÜM ÜRÜNLERİN today_special değerini kesinlikle false yap
     if update.get("today_special") is True:
-        await db.menu_items.update_many({}, {"$set": {"today_special": False}})
+        await db.menu_items.update_many({"id": {"$ne": item_id}}, {"$set": {"today_special": False}})
+        
     update["updated_at"] = datetime.now(timezone.utc).isoformat()
     result = await db.menu_items.update_one({"id": item_id}, {"$set": update})
     if result.matched_count == 0:
