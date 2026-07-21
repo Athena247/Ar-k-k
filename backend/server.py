@@ -386,11 +386,8 @@ async def admin_list_items(user=Depends(get_current_admin)):
 async def admin_create_item(payload: MenuItemCreate, user=Depends(get_current_admin)):
     now = datetime.now(timezone.utc).isoformat()
     data = payload.model_dump()
-    
-    # Eğer yeni eklenen ürün günün şef seçimi yapıldıysa, diğerlerinin günün şef seçimini kaldır
     if data.get("today_special"):
         await db.menu_items.update_many({}, {"$set": {"today_special": False}})
-        
     doc = {
         "id": str(uuid.uuid4()),
         **data,
@@ -407,11 +404,8 @@ async def admin_update_item(item_id: str, payload: MenuItemUpdate, user=Depends(
     update = {k: v for k, v in payload.model_dump().items() if v is not None}
     if not update:
         raise HTTPException(status_code=400, detail="No fields to update")
-        
-    # Eğer güncellenen ürün günün şef seçimi yapıldıysa, diğer tüm ürünlerin günün şef seçimini false yap
     if update.get("today_special") is True:
         await db.menu_items.update_many({"id": {"$ne": item_id}}, {"$set": {"today_special": False}})
-        
     update["updated_at"] = datetime.now(timezone.utc).isoformat()
     result = await db.menu_items.update_one({"id": item_id}, {"$set": update})
     if result.matched_count == 0:
