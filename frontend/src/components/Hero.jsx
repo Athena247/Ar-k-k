@@ -38,6 +38,7 @@ export default function Hero({ onExplore }) {
                 const res = await fetch("/api/menu/items");
                 const data = await res.json();
                 if (Array.isArray(data) && data.length > 0) {
+                    // Kesinlikle today_special true olanı öne al, yoksa ilk ürünü seç
                     const special =
                         data.find((item) => item.today_special === true) ||
                         data.find((item) => item.chef_choice === true) ||
@@ -182,7 +183,7 @@ export default function Hero({ onExplore }) {
                             {getItemDesc(todaySpecial)}
                         </p>
                         <p className="mt-3 font-medium text-ink text-lg">
-                            {todaySpecial ? `₺${todaySpecial.price}` : "₺460"}
+                            {todaySpecial ? `₺${todaySpecial.price}` : ""}
                         </p>
                     </motion.div>
 
