@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { adminApi, publicApi } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
-import { Pencil, Trash2, Plus, LogOut, X, Star, Flame } from "lucide-react";
+import { Pencil, Trash2, Plus, LogOut, X, Star, Flame, Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast, Toaster } from "sonner";
 import ImageUpload from "@/components/ImageUpload";
@@ -19,6 +19,7 @@ const EMPTY = {
     category: "kebaplar",
     popular: false,
     chef_choice: false,
+    today_special: false,
     order: 1,
     active: true,
 };
@@ -28,9 +29,11 @@ export default function AdminDashboard() {
     const nav = useNavigate();
     const [items, setItems] = useState([]);
     const [cats, setCats] = useState([]);
-    const [editing, setEditing] = useState(null); // item being edited or EMPTY (new)
+    const [editing, setEditing] = useState(null);
     const [formLang, setFormLang] = useState("tr");
     const [busy, setBusy] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+
     const handleAddCategory = async () => {
         const name = prompt("Yeni kategori adı (Örn: Tatlılar):");
         if (!name) return;
@@ -111,9 +114,16 @@ export default function AdminDashboard() {
 
     if (loading || !user) return null;
 
+    // Arama filtresi uygulama
+    const filteredItems = items.filter((it) =>
+        it.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (it.description && it.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        it.category.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     const grouped = cats.map((c) => ({
         ...c,
-        items: items
+        items: filteredItems
             .filter((i) => i.category === c.slug)
             .sort((a, b) => (a.order || 0) - (b.order || 0)),
     }));
@@ -157,7 +167,19 @@ export default function AdminDashboard() {
                 </div>
             </header>
 
-            <main className="px-4 md:px-12 lg:px-16 py-10 md:py-16 space-y-16">
+            <main className="px-4 md:px-12 lg:px-16 py-10 md:py-16 space-y-12">
+                {/* Arama Çubuğu */}
+                <div className="relative max-w-md">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-2" />
+                    <input
+                        type="text"
+                        placeholder="Menüde ürün ara..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full pl-10 pr-4 py-2.5 bg-transparent border border-line focus:border-ember outline-none text-sm text-ink placeholder:text-ink-2"
+                    />
+                </div>
+
                 {grouped.map((c) => (
                     <section
                         key={c.slug}
@@ -193,21 +215,18 @@ export default function AdminDashboard() {
                                                 {it.name}
                                             </p>
                                             {it.popular && (
-                                                <span
-                                                    className="inline-flex items-center gap-1 text-[10px] uppercase tracking-widest text-ink-2"
-                                                    title="Popüler"
-                                                >
-                                                    <Flame className="w-3 h-3" />
-                                                    Popüler
+                                                <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-widest text-ink-2">
+                                                    <Flame className="w-3 h-3" /> Popüler
                                                 </span>
                                             )}
                                             {it.chef_choice && (
-                                                <span
-                                                    className="inline-flex items-center gap-1 text-[10px] uppercase tracking-widest text-ember"
-                                                    title="Şefin Seçimi"
-                                                >
-                                                    <Star className="w-3 h-3" />
-                                                    Şef
+                                                <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-widest text-ember">
+                                                    <Star className="w-3 h-3" /> Şef
+                                                </span>
+                                            )}
+                                            {it.today_special && (
+                                                <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-widest text-ember border border-ember/30 px-1.5 py-0.5">
+                                                    Günün Şefi
                                                 </span>
                                             )}
                                         </div>
@@ -216,8 +235,7 @@ export default function AdminDashboard() {
                                         </p>
                                     </div>
                                     <div className="col-span-2 md:col-span-2 font-serif italic">
-                                        ₺
-                                        {Number(it.price).toLocaleString("tr-TR")}
+                                        ₺{Number(it.price).toLocaleString("tr-TR")}
                                     </div>
                                     <div className="col-span-2 md:col-span-2 flex items-center justify-end gap-2">
                                         <button
@@ -227,7 +245,6 @@ export default function AdminDashboard() {
                                                 setEditing({ ...it });
                                             }}
                                             className="w-9 h-9 inline-flex items-center justify-center border border-line hover:bg-ink hover:text-bone transition-colors"
-                                            aria-label="Düzenle"
                                         >
                                             <Pencil className="w-4 h-4" strokeWidth={1.5} />
                                         </button>
@@ -235,7 +252,6 @@ export default function AdminDashboard() {
                                             data-testid={`delete-${it.id}`}
                                             onClick={() => remove(it.id)}
                                             className="w-9 h-9 inline-flex items-center justify-center border border-line hover:bg-ember hover:text-bone hover:border-ember transition-colors"
-                                            aria-label="Sil"
                                         >
                                             <Trash2 className="w-4 h-4" strokeWidth={1.5} />
                                         </button>
@@ -244,7 +260,7 @@ export default function AdminDashboard() {
                             ))}
                             {c.items.length === 0 && (
                                 <p className="py-8 text-center text-ink-2 text-sm">
-                                    Bu kategoride henüz öğe yok.
+                                    Aramaya uygun öğe bulunamadı.
                                 </p>
                             )}
                         </div>
@@ -252,6 +268,7 @@ export default function AdminDashboard() {
                 ))}
             </main>
 
+            {/* Modal Form */}
             <AnimatePresence>
                 {editing && (
                     <motion.div
@@ -265,65 +282,40 @@ export default function AdminDashboard() {
                             initial={{ y: 30, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             exit={{ y: 20, opacity: 0 }}
-                            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                             onClick={(e) => e.stopPropagation()}
                             className="w-full max-w-2xl bg-bone border border-line p-8 md:p-10 relative max-h-[92vh] overflow-y-auto"
-                            data-testid="item-form"
                         >
                             <button
                                 onClick={() => setEditing(null)}
                                 className="absolute top-4 right-4 w-9 h-9 inline-flex items-center justify-center rounded-full hover:bg-bone-2"
-                                data-testid="form-close"
-                                aria-label="Kapat"
                             >
                                 <X className="w-4 h-4" />
                             </button>
-                            <p className="eyebrow">
-                                {editing.id ? "Düzenle" : "Yeni Öğe"}
-                            </p>
+                            <p className="eyebrow">{editing.id ? "Düzenle" : "Yeni Öğe"}</p>
                             <h3 className="font-serif italic text-3xl md:text-4xl mt-2 mb-8 leading-tight">
                                 Menü kartı
                             </h3>
 
                             <div className="grid grid-cols-2 gap-5">
-                                {/* Language tabs for name + description */}
                                 <div className="col-span-2">
-                                    <div
-                                        data-testid="form-lang-tabs"
-                                        role="tablist"
-                                        className="inline-flex items-center gap-1 border border-line rounded-full p-1 mb-1"
-                                    >
+                                    <div className="inline-flex items-center gap-1 border border-line rounded-full p-1 mb-1">
                                         {["tr", "en", "ar"].map((lg) => (
                                             <button
                                                 key={lg}
                                                 type="button"
-                                                role="tab"
-                                                data-testid={`form-lang-${lg}`}
-                                                aria-selected={formLang === lg}
                                                 onClick={() => setFormLang(lg)}
                                                 className={`relative px-3 py-1 text-[11px] tracking-[0.22em] uppercase font-medium transition-colors ${
-                                                    formLang === lg
-                                                        ? "text-bone"
-                                                        : "text-ink-2 hover:text-ink"
+                                                    formLang === lg ? "text-bone" : "text-ink-2 hover:text-ink"
                                                 }`}
                                             >
                                                 {formLang === lg && (
                                                     <motion.span
                                                         layoutId="form-lang-pill"
-                                                        transition={{
-                                                            type: "spring",
-                                                            stiffness: 380,
-                                                            damping: 32,
-                                                        }}
                                                         className="absolute inset-0 bg-ink rounded-full"
                                                     />
                                                 )}
                                                 <span className="relative">
-                                                    {lg === "tr"
-                                                        ? "Türkçe"
-                                                        : lg === "en"
-                                                        ? "English"
-                                                        : "عربي"}
+                                                    {lg === "tr" ? "Türkçe" : lg === "en" ? "English" : "عربي"}
                                                 </span>
                                             </button>
                                         ))}
@@ -333,35 +325,19 @@ export default function AdminDashboard() {
                                 {formLang === "tr" ? (
                                     <>
                                         <label className="col-span-2 block">
-                                            <span className="eyebrow">
-                                                Yemek Adı (TR)
-                                            </span>
+                                            <span className="eyebrow">Yemek Adı (TR)</span>
                                             <input
-                                                data-testid="form-name"
                                                 value={editing.name}
-                                                onChange={(e) =>
-                                                    setEditing({
-                                                        ...editing,
-                                                        name: e.target.value,
-                                                    })
-                                                }
+                                                onChange={(e) => setEditing({ ...editing, name: e.target.value })}
                                                 className="w-full bg-transparent border-0 border-b border-line focus:border-ember outline-none py-2 mt-1 text-lg"
                                             />
                                         </label>
                                         <label className="col-span-2 block">
-                                            <span className="eyebrow">
-                                                Açıklama (TR)
-                                            </span>
+                                            <span className="eyebrow">Açıklama (TR)</span>
                                             <textarea
-                                                data-testid="form-description"
                                                 rows={2}
                                                 value={editing.description}
-                                                onChange={(e) =>
-                                                    setEditing({
-                                                        ...editing,
-                                                        description: e.target.value,
-                                                    })
-                                                }
+                                                onChange={(e) => setEditing({ ...editing, description: e.target.value })}
                                                 className="w-full bg-transparent border-0 border-b border-line focus:border-ember outline-none py-2 mt-1"
                                             />
                                         </label>
@@ -369,35 +345,19 @@ export default function AdminDashboard() {
                                 ) : formLang === "en" ? (
                                     <>
                                         <label className="col-span-2 block">
-                                            <span className="eyebrow">
-                                                Dish Name (EN)
-                                            </span>
+                                            <span className="eyebrow">Dish Name (EN)</span>
                                             <input
-                                                data-testid="form-name-en"
                                                 value={editing.name_en || ""}
-                                                onChange={(e) =>
-                                                    setEditing({
-                                                        ...editing,
-                                                        name_en: e.target.value,
-                                                    })
-                                                }
+                                                onChange={(e) => setEditing({ ...editing, name_en: e.target.value })}
                                                 className="w-full bg-transparent border-0 border-b border-line focus:border-ember outline-none py-2 mt-1 text-lg"
                                             />
                                         </label>
                                         <label className="col-span-2 block">
-                                            <span className="eyebrow">
-                                                Description (EN)
-                                            </span>
+                                            <span className="eyebrow">Description (EN)</span>
                                             <textarea
-                                                data-testid="form-description-en"
                                                 rows={2}
                                                 value={editing.description_en || ""}
-                                                onChange={(e) =>
-                                                    setEditing({
-                                                        ...editing,
-                                                        description_en: e.target.value,
-                                                    })
-                                                }
+                                                onChange={(e) => setEditing({ ...editing, description_en: e.target.value })}
                                                 className="w-full bg-transparent border-0 border-b border-line focus:border-ember outline-none py-2 mt-1"
                                             />
                                         </label>
@@ -405,62 +365,40 @@ export default function AdminDashboard() {
                                 ) : (
                                     <>
                                         <label className="col-span-2 block" dir="rtl">
-                                            <span className="eyebrow">
-                                                اسم الوجبة (AR)
-                                            </span>
+                                            <span className="eyebrow">اسم الوجبة (AR)</span>
                                             <input
-                                                data-testid="form-name-ar"
                                                 value={editing.name_ar || ""}
-                                                onChange={(e) =>
-                                                    setEditing({
-                                                        ...editing,
-                                                        name_ar: e.target.value,
-                                                    })
-                                                }
+                                                onChange={(e) => setEditing({ ...editing, name_ar: e.target.value })}
                                                 className="w-full bg-transparent border-0 border-b border-line focus:border-ember outline-none py-2 mt-1 text-lg text-right"
                                             />
                                         </label>
                                         <label className="col-span-2 block" dir="rtl">
-                                            <span className="eyebrow">
-                                                الوصف (AR)
-                                            </span>
+                                            <span className="eyebrow">الوصف (AR)</span>
                                             <textarea
-                                                data-testid="form-description-ar"
                                                 rows={2}
                                                 value={editing.description_ar || ""}
-                                                onChange={(e) =>
-                                                    setEditing({
-                                                        ...editing,
-                                                        description_ar: e.target.value,
-                                                    })
-                                                }
+                                                onChange={(e) => setEditing({ ...editing, description_ar: e.target.value })}
                                                 className="w-full bg-transparent border-0 border-b border-line focus:border-ember outline-none py-2 mt-1 text-right"
                                             />
                                         </label>
                                     </>
                                 )}
-                                
+
                                 <label className="block">
                                     <span className="eyebrow">Fiyat (₺)</span>
                                     <input
-                                        data-testid="form-price"
                                         type="number"
                                         value={editing.price}
-                                        onChange={(e) =>
-                                            setEditing({ ...editing, price: e.target.value })
-                                        }
+                                        onChange={(e) => setEditing({ ...editing, price: e.target.value })}
                                         className="w-full bg-transparent border-0 border-b border-line focus:border-ember outline-none py-2 mt-1"
                                     />
                                 </label>
                                 <label className="block">
                                     <span className="eyebrow">Sıra</span>
                                     <input
-                                        data-testid="form-order"
                                         type="number"
                                         value={editing.order || 0}
-                                        onChange={(e) =>
-                                            setEditing({ ...editing, order: e.target.value })
-                                        }
+                                        onChange={(e) => setEditing({ ...editing, order: e.target.value })}
                                         className="w-full bg-transparent border-0 border-b border-line focus:border-ember outline-none py-2 mt-1"
                                     />
                                 </label>
@@ -475,28 +413,14 @@ export default function AdminDashboard() {
                                             <Plus className="w-3 h-3" /> Yeni Kategori Ekle
                                         </button>
                                     </div>
-                                    <div
-                                        role="radiogroup"
-                                        data-testid="form-category"
-                                        className="flex flex-wrap gap-2 mt-2"
-                                    >
+                                    <div className="flex flex-wrap gap-2 mt-2">
                                         {cats.map((c) => (
                                             <div key={c.slug} className="flex items-center gap-1">
                                                 <button
                                                     type="button"
-                                                    role="radio"
-                                                    aria-checked={editing.category === c.slug}
-                                                    data-testid={`form-cat-${c.slug}`}
-                                                    onClick={() =>
-                                                        setEditing({
-                                                            ...editing,
-                                                            category: c.slug,
-                                                        })
-                                                    }
+                                                    onClick={() => setEditing({ ...editing, category: c.slug })}
                                                     className={`px-3 py-1.5 text-sm rounded-l-full border ${
-                                                        editing.category === c.slug
-                                                            ? "bg-ink text-bone border-ink"
-                                                            : "border-line hover:border-ink"
+                                                        editing.category === c.slug ? "bg-ink text-bone border-ink" : "border-line hover:border-ink"
                                                     }`}
                                                 >
                                                     {c.name}
@@ -505,7 +429,6 @@ export default function AdminDashboard() {
                                                     type="button"
                                                     onClick={() => handleRemoveCategory(c.slug)}
                                                     className="px-2 py-1.5 text-xs rounded-r-full border border-l-0 border-line hover:bg-ember hover:text-bone hover:border-ember transition-colors"
-                                                    title="Kategoriyi Sil"
                                                 >
                                                     <X className="w-3 h-3" />
                                                 </button>
@@ -515,57 +438,35 @@ export default function AdminDashboard() {
                                 </label>
                                 
                                 <div className="col-span-2 block">
-                                    <span className="eyebrow block mb-2">
-                                        Görsel
-                                    </span>
+                                    <span className="eyebrow block mb-2">Görsel</span>
                                     <ImageUpload
                                         value={editing.image}
-                                        onChange={(url) =>
-                                            setEditing({ ...editing, image: url })
-                                        }
+                                        onChange={(url) => setEditing({ ...editing, image: url })}
                                     />
                                 </div>
                                 <label className="flex items-center gap-3 cursor-pointer">
                                     <input
-                                        data-testid="form-popular"
                                         type="checkbox"
                                         checked={!!editing.popular}
-                                        onChange={(e) =>
-                                            setEditing({
-                                                ...editing,
-                                                popular: e.target.checked,
-                                            })
-                                        }
+                                        onChange={(e) => setEditing({ ...editing, popular: e.target.value === 'on' || e.target.checked })}
                                         className="w-4 h-4 accent-ember"
                                     />
                                     <span className="text-sm">Popüler</span>
                                 </label>
                                 <label className="flex items-center gap-3 cursor-pointer">
                                     <input
-                                        data-testid="form-chef"
                                         type="checkbox"
                                         checked={!!editing.chef_choice}
-                                        onChange={(e) =>
-                                            setEditing({
-                                                ...editing,
-                                                chef_choice: e.target.checked,
-                                            })
-                                        }
+                                        onChange={(e) => setEditing({ ...editing, chef_choice: e.target.checked })}
                                         className="w-4 h-4 accent-ember"
                                     />
                                     <span className="text-sm">Şefin Seçimi</span>
                                 </label>
-                                <label className="flex items-center gap-3 cursor-pointer">
+                                <label className="flex items-center gap-3 cursor-pointer col-span-2">
                                     <input
-                                        data-testid="form-today-special"
                                         type="checkbox"
                                         checked={!!editing.today_special}
-                                        onChange={(e) =>
-                                            setEditing({
-                                                ...editing,
-                                                today_special: e.target.checked,
-                                            })
-                                        }
+                                        onChange={(e) => setEditing({ ...editing, today_special: e.target.checked })}
                                         className="w-4 h-4 accent-ember"
                                     />
                                     <span className="text-sm">Günün Şef Seçimi (Ana Banner)</span>
@@ -574,7 +475,6 @@ export default function AdminDashboard() {
 
                             <div className="flex items-center gap-3 mt-8">
                                 <button
-                                    data-testid="form-save"
                                     onClick={save}
                                     disabled={busy}
                                     className="px-6 py-3 bg-ink text-bone hover:bg-ember transition-colors disabled:opacity-50"
