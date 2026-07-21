@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { adminApi, publicApi } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
-import { Pencil, Trash2, Plus, LogOut, X, Star, Flame, Search } from "lucide-react";
+import { Pencil, Trash2, Plus, LogOut, X, Star, Flame, Search, Settings, ImageIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast, Toaster } from "sonner";
 import ImageUpload from "@/components/ImageUpload";
@@ -33,6 +33,14 @@ export default function AdminDashboard() {
     const [formLang, setFormLang] = useState("tr");
     const [busy, setBusy] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
+
+    // Site Settings State
+    const [showSettings, setShowSettings] = useState(false);
+    const [siteSettings, setSiteSettings] = useState({
+        hero_image: "",
+        hero_title: "Arı Köşk",
+        hero_subtitle: ""
+    });
 
     const handleAddCategory = async () => {
         const name = prompt("Yeni kategori adı (Örn: Tatlılar):");
@@ -70,6 +78,17 @@ export default function AdminDashboard() {
         ]);
         setItems(its);
         setCats(cs);
+        
+        // Site ayarlarını çek
+        try {
+            const res = await fetch("https://ar-k-k.onrender.com/api/settings");
+            const data = await res.json();
+            if (data) {
+                setSiteSettings(data);
+            }
+        } catch (err) {
+            console.error("Settings fetch error:", err);
+        }
     };
 
     useEffect(() => {
@@ -100,6 +119,33 @@ export default function AdminDashboard() {
         }
     };
 
+    const saveSettings = async () => {
+        setBusy(true);
+        try {
+            const token = localStorage.getItem("admin_token") || ""; 
+            // Cookie authentication yapıyorsak ekstra header gerekmeyebilir ama emin olmak için:
+            const res = await fetch("https://ar-k-k.onrender.com/api/admin/settings", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    // Authorization eklenebilir eğer JWT localStorage'da tutuluyorsa
+                },
+                body: JSON.stringify(siteSettings)
+            });
+            if (res.ok) {
+                toast.success("Site ayarları başarıyla güncellendi");
+                setShowSettings(false);
+                await refresh();
+            } else {
+                toast.error("Ayarlar kaydedilirken hata oluştu");
+            }
+        } catch (e) {
+            toast.error("Ayarlar kaydedilemedi");
+        } finally {
+            setBusy(false);
+        }
+    };
+
     const remove = async (id) => {
         if (!window.confirm("Bu menü öğesini silmek istediğinize emin misiniz?"))
             return;
@@ -114,7 +160,6 @@ export default function AdminDashboard() {
 
     if (loading || !user) return null;
 
-    // Arama filtresi uygulama
     const filteredItems = items.filter((it) =>
         it.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (it.description && it.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
@@ -145,6 +190,12 @@ export default function AdminDashboard() {
                 </div>
                 <div className="flex items-center gap-2">
                     <button
+                        onClick={() => setShowSettings(true)}
+                        className="inline-flex items-center gap-2 px-4 py-2 border border-line hover:bg-bone-2 transition-colors text-sm"
+                    >
+                        <Settings className="w-4 h-4" /> Site Ayarları
+                    </button>
+                    <button
                         data-testid="new-item-btn"
                         onClick={() => {
                             setFormLang("tr");
@@ -168,7 +219,6 @@ export default function AdminDashboard() {
             </header>
 
             <main className="px-4 md:px-12 lg:px-16 py-10 md:py-16 space-y-12">
-                {/* Arama Çubuğu */}
                 <div className="relative max-w-md">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-2" />
                     <input
@@ -268,7 +318,74 @@ export default function AdminDashboard() {
                 ))}
             </main>
 
-            {/* Modal Form */}
+            {/* Ayarlar (Site Görseli) Modal Form */}
+            <AnimatePresence>
+                {showSettings && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100] bg-ink/40 backdrop-blur-md flex items-center justify-center p-4"
+                        onClick={() => setShowSettings(false)}
+                    >
+                        <motion.div
+                            initial={{ y: 30, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: 20, opacity: 0 }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-full max-w-xl bg-bone border border-line p-8 md:p-10 relative"
+                        >
+                            <button
+                                onClick={() => setShowSettings(false)}
+                                className="absolute top-4 right-4 w-9 h-9 inline-flex items-center justify-center rounded-full hover:bg-bone-2"
+                            >
+                                <X className="w-4 h-4" />
+                            </button>
+                            <p className="eyebrow">Ayarlar</p>
+                            <h3 className="font-serif italic text-3xl md:text-4xl mt-2 mb-8 leading-tight">
+                                Dükkan Görseli
+                            </h3>
+
+                            <div className="space-y-6">
+                                <label className="block">
+                                    <span className="eyebrow block mb-2">Görselin Açıklaması (Başlık)</span>
+                                    <input
+                                        value={siteSettings.hero_subtitle}
+                                        onChange={(e) => setSiteSettings({ ...siteSettings, hero_subtitle: e.target.value })}
+                                        placeholder="Örn: Dükkanımızdan Kareler veya Hoş Geldiniz"
+                                        className="w-full bg-transparent border-0 border-b border-line focus:border-ember outline-none py-2 mt-1 text-lg"
+                                    />
+                                </label>
+                                
+                                <div className="block">
+                                    <span className="eyebrow block mb-2 flex items-center gap-2"><ImageIcon className="w-4 h-4"/> Mekan Resmi Yükle</span>
+                                    <ImageUpload
+                                        value={siteSettings.hero_image}
+                                        onChange={(url) => setSiteSettings({ ...siteSettings, hero_image: url })}
+                                    />
+                                    {siteSettings.hero_image && (
+                                        <div className="mt-4 aspect-video rounded overflow-hidden border border-line">
+                                            <img src={siteSettings.hero_image} alt="Dükkan" className="w-full h-full object-cover"/>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-3 mt-8">
+                                <button
+                                    onClick={saveSettings}
+                                    disabled={busy}
+                                    className="px-6 py-3 bg-ink text-bone hover:bg-ember transition-colors disabled:opacity-50"
+                                >
+                                    {busy ? "Kaydediliyor…" : "Değişiklikleri Kaydet"}
+                                </button>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Menü Öğesi Düzenleme Modal Form */}
             <AnimatePresence>
                 {editing && (
                     <motion.div
