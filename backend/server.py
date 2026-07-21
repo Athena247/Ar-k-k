@@ -117,6 +117,7 @@ class MenuItemCreate(BaseModel):
     category: str
     popular: bool = False
     chef_choice: bool = False
+    today_special: bool = False
     order: int = 0
     active: bool = True
 
@@ -133,6 +134,7 @@ class MenuItemUpdate(BaseModel):
     category: Optional[str] = None
     popular: Optional[bool] = None
     chef_choice: Optional[bool] = None
+    today_special: Optional[bool] = None
     order: Optional[int] = None
     active: Optional[bool] = None
 
