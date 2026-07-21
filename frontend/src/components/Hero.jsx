@@ -15,6 +15,9 @@ export default function Hero({ onExplore }) {
     const { t, lang } = useLang();
 
     const [time, setTime] = useState("");
+    const [todaySpecial, setTodaySpecial] = useState(null);
+
+    // Saat güncellemesi
     useEffect(() => {
         const update = () => {
             const d = new Date();
@@ -30,6 +33,41 @@ export default function Hero({ onExplore }) {
         const iv = setInterval(update, 60000);
         return () => clearInterval(iv);
     }, [lang]);
+
+    // Günün şef seçimini API'den çekme
+    useEffect(() => {
+        fetch("/api/menu/items")
+            .then((res) => res.json())
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    // today_special true olanı bul, yoksa chef_choice veya ilk ürünü seç
+                    const special =
+                        data.find((item) => item.today_special) ||
+                        data.find((item) => item.chef_choice) ||
+                        data[0];
+                    setTodaySpecial(special);
+                }
+            })
+            .catch((err) => console.error("Error fetching today's special:", err));
+    }, []);
+
+    // Dil bazlı isim ve açıklama seçimi
+    const getItemName = (item) => {
+        if (!item) return lang === "en" ? "Beyti Wrap" : "Beyti Sarma";
+        if (lang === "en" && item.name_en) return item.name_en;
+        if (lang === "ar" && item.name_ar) return item.name_ar;
+        return item.name;
+    };
+
+    const getItemDesc = (item) => {
+        if (!item)
+            return lang === "en"
+                ? "Minced meat wrapped in lavash, with yogurt and tomato sauce."
+                : "Zırh kıyma, lavaş sargı, yoğurt ve közlenmiş domates.";
+        if (lang === "en" && item.description_en) return item.description_en;
+        if (lang === "ar" && item.description_ar) return item.description_ar;
+        return item.description;
+    };
 
     return (
         <section
@@ -117,7 +155,7 @@ export default function Hero({ onExplore }) {
                         style={{ borderTop: "1px solid var(--line)" }}
                     >
                         <motion.img
-                            src={HERO_IMG}
+                            src={todaySpecial?.image || HERO_IMG}
                             alt="Odun ateşinde kebap"
                             className="w-full h-full object-cover"
                             style={{ y, scale }}
@@ -147,14 +185,14 @@ export default function Hero({ onExplore }) {
                     >
                         <p className="eyebrow mb-2">{t.todaysChoice}</p>
                         <p className="font-serif italic text-2xl md:text-3xl leading-tight">
-                            {lang === "en" ? "Beyti Wrap" : "Beyti Sarma"}
+                            {getItemName(todaySpecial)}
                         </p>
                         <p className="text-sm text-ink-2 mt-2 leading-relaxed">
-                            {lang === "en"
-                                ? "Minced meat wrapped in lavash, with yogurt and tomato sauce."
-                                : "Zırh kıyma, lavaş sargı, yoğurt ve közlenmiş domates."}
+                            {getItemDesc(todaySpecial)}
                         </p>
-                        <p className="mt-3 font-medium">₺385</p>
+                        <p className="mt-3 font-medium">
+                            ₺{todaySpecial ? todaySpecial.price : 385}
+                        </p>
                     </motion.div>
 
                     <motion.button
