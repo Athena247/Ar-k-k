@@ -10,8 +10,10 @@ import ImageUpload from "@/components/ImageUpload";
 const EMPTY = {
     name: "",
     name_en: "",
+    name_ar: "",
     description: "",
     description_en: "",
+    description_ar: "",
     price: 0,
     image: "",
     category: "kebaplar",
@@ -29,6 +31,30 @@ export default function AdminDashboard() {
     const [editing, setEditing] = useState(null); // item being edited or EMPTY (new)
     const [formLang, setFormLang] = useState("tr");
     const [busy, setBusy] = useState(false);
+    const handleAddCategory = async () => {
+        const name = prompt("Yeni kategori adı (Örn: Tatlılar):");
+        if (!name) return;
+        const slug = name.toLowerCase().replace(/ğ/g, "g").replace(/ü/g, "u").replace(/ş/g, "s").replace(/ı/g, "i").replace(/ö/g, "o").replace(/ç/g, "c").replace(/[^a-z0-9]/g, "-");
+        
+        try {
+            await adminApi.createCategory({ name, slug });
+            toast.success("Kategori eklendi");
+            await refresh();
+        } catch (e) {
+            toast.error("Kategori eklenemedi");
+        }
+    };
+
+    const handleRemoveCategory = async (slug) => {
+        if (!window.confirm("Bu kategoriyi silmek istediğinize emin misiniz?")) return;
+        try {
+            await adminApi.removeCategory(slug);
+            toast.success("Kategori silindi");
+            await refresh();
+        } catch (e) {
+            toast.error("Kategori silinemedi");
+        }
+    };
 
     useEffect(() => {
         if (!loading && !user) nav("/admin/login");
@@ -267,7 +293,7 @@ export default function AdminDashboard() {
                                         role="tablist"
                                         className="inline-flex items-center gap-1 border border-line rounded-full p-1 mb-1"
                                     >
-                                        {["tr", "en"].map((lg) => (
+                                        {["tr", "en", "ar"].map((lg) => (
                                             <button
                                                 key={lg}
                                                 type="button"
@@ -295,7 +321,9 @@ export default function AdminDashboard() {
                                                 <span className="relative">
                                                     {lg === "tr"
                                                         ? "Türkçe"
-                                                        : "English"}
+                                                        : lg === "en"
+                                                        ? "English"
+                                                        : "عربي"}
                                                 </span>
                                             </button>
                                         ))}
@@ -338,7 +366,7 @@ export default function AdminDashboard() {
                                             />
                                         </label>
                                     </>
-                                ) : (
+                                ) : formLang === "en" ? (
                                     <>
                                         <label className="col-span-2 block">
                                             <span className="eyebrow">
@@ -374,8 +402,44 @@ export default function AdminDashboard() {
                                             />
                                         </label>
                                     </>
+                                ) : (
+                                    <>
+                                        <label className="col-span-2 block" dir="rtl">
+                                            <span className="eyebrow">
+                                                اسم الوجبة (AR)
+                                            </span>
+                                            <input
+                                                data-testid="form-name-ar"
+                                                value={editing.name_ar || ""}
+                                                onChange={(e) =>
+                                                    setEditing({
+                                                        ...editing,
+                                                        name_ar: e.target.value,
+                                                    })
+                                                }
+                                                className="w-full bg-transparent border-0 border-b border-line focus:border-ember outline-none py-2 mt-1 text-lg text-right"
+                                            />
+                                        </label>
+                                        <label className="col-span-2 block" dir="rtl">
+                                            <span className="eyebrow">
+                                                الوصف (AR)
+                                            </span>
+                                            <textarea
+                                                data-testid="form-description-ar"
+                                                rows={2}
+                                                value={editing.description_ar || ""}
+                                                onChange={(e) =>
+                                                    setEditing({
+                                                        ...editing,
+                                                        description_ar: e.target.value,
+                                                    })
+                                                }
+                                                className="w-full bg-transparent border-0 border-b border-line focus:border-ember outline-none py-2 mt-1 text-right"
+                                            />
+                                        </label>
+                                    </>
                                 )}
-
+                                
                                 <label className="block">
                                     <span className="eyebrow">Fiyat (₺)</span>
                                     <input
@@ -401,36 +465,55 @@ export default function AdminDashboard() {
                                     />
                                 </label>
                                 <label className="col-span-2 block">
-                                    <span className="eyebrow">Kategori</span>
+                                    <div className="flex items-center justify-between mb-2">
+                                        <span className="eyebrow">Kategori</span>
+                                        <button
+                                            type="button"
+                                            onClick={handleAddCategory}
+                                            className="text-xs text-ember hover:underline flex items-center gap-1"
+                                        >
+                                            <Plus className="w-3 h-3" /> Yeni Kategori Ekle
+                                        </button>
+                                    </div>
                                     <div
                                         role="radiogroup"
                                         data-testid="form-category"
                                         className="flex flex-wrap gap-2 mt-2"
                                     >
                                         {cats.map((c) => (
-                                            <button
-                                                key={c.slug}
-                                                type="button"
-                                                role="radio"
-                                                aria-checked={editing.category === c.slug}
-                                                data-testid={`form-cat-${c.slug}`}
-                                                onClick={() =>
-                                                    setEditing({
-                                                        ...editing,
-                                                        category: c.slug,
-                                                    })
-                                                }
-                                                className={`px-3 py-1.5 text-sm rounded-full border ${
-                                                    editing.category === c.slug
-                                                        ? "bg-ink text-bone border-ink"
-                                                        : "border-line hover:border-ink"
-                                                }`}
-                                            >
-                                                {c.name}
-                                            </button>
+                                            <div key={c.slug} className="flex items-center gap-1">
+                                                <button
+                                                    type="button"
+                                                    role="radio"
+                                                    aria-checked={editing.category === c.slug}
+                                                    data-testid={`form-cat-${c.slug}`}
+                                                    onClick={() =>
+                                                        setEditing({
+                                                            ...editing,
+                                                            category: c.slug,
+                                                        })
+                                                    }
+                                                    className={`px-3 py-1.5 text-sm rounded-l-full border ${
+                                                        editing.category === c.slug
+                                                            ? "bg-ink text-bone border-ink"
+                                                            : "border-line hover:border-ink"
+                                                    }`}
+                                                >
+                                                    {c.name}
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleRemoveCategory(c.slug)}
+                                                    className="px-2 py-1.5 text-xs rounded-r-full border border-l-0 border-line hover:bg-ember hover:text-bone hover:border-ember transition-colors"
+                                                    title="Kategoriyi Sil"
+                                                >
+                                                    <X className="w-3 h-3" />
+                                                </button>
+                                            </div>
                                         ))}
                                     </div>
                                 </label>
+                                
                                 <div className="col-span-2 block">
                                     <span className="eyebrow block mb-2">
                                         Görsel
