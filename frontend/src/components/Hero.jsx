@@ -5,7 +5,7 @@ import { ArrowDown } from "lucide-react";
 import { useLang } from "@/context/LangContext";
 import LangToggle from "./LangToggle";
 
-const DEFAULT_IMG =
+const DEFAULT_SHOP_IMG =
     "https://images.pexels.com/photos/5779787/pexels-photo-5779787.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1200&w=1600";
 
 export default function Hero({ onExplore }) {
@@ -13,6 +13,11 @@ export default function Hero({ onExplore }) {
 
     const [time, setTime] = useState("");
     const [todaySpecial, setTodaySpecial] = useState(null);
+    const [siteSettings, setSiteSettings] = useState({
+        hero_image: DEFAULT_SHOP_IMG,
+        hero_title: "Arı Köşk",
+        hero_subtitle: "Dükkanımızdan Kareler"
+    });
 
     // Saat güncellemesi
     useEffect(() => {
@@ -31,24 +36,32 @@ export default function Hero({ onExplore }) {
         return () => clearInterval(iv);
     }, [lang]);
 
-    // Günün şef seçimini doğrudan Render backend adresinden çekme
+    // Günün şef seçimini ve site ayarlarını çekme
     useEffect(() => {
-        const fetchSpecial = async () => {
+        const fetchData = async () => {
             try {
-                const res = await fetch("https://ar-k-k.onrender.com/api/menu/items");
-                const data = await res.json();
-                if (Array.isArray(data) && data.length > 0) {
+                // Menü öğeleri (Günün yemeği için)
+                const resMenu = await fetch("https://ar-k-k.onrender.com/api/menu/items");
+                const menuData = await resMenu.json();
+                if (Array.isArray(menuData) && menuData.length > 0) {
                     const special =
-                        data.find((item) => item.today_special === true || item.today_special === "true") ||
-                        data.find((item) => item.chef_choice === true) ||
-                        data[0];
+                        menuData.find((item) => item.today_special === true || item.today_special === "true") ||
+                        menuData.find((item) => item.chef_choice === true) ||
+                        menuData[0];
                     setTodaySpecial(special);
                 }
+
+                // Site ayarları (Dükkan görseli ve açıklaması için)
+                const resSettings = await fetch("https://ar-k-k.onrender.com/api/settings");
+                const settingsData = await resSettings.json();
+                if (settingsData) {
+                    setSiteSettings(prev => ({ ...prev, ...settingsData }));
+                }
             } catch (err) {
-                console.error("Error fetching special item:", err);
+                console.error("Error fetching hero data:", err);
             }
         };
-        fetchSpecial();
+        fetchData();
     }, []);
 
     const getItemName = (item) => {
@@ -136,7 +149,7 @@ export default function Hero({ onExplore }) {
                 </div>
             </div>
 
-            {/* Sabit görsel ve dinamik ürün bilgileri */}
+            {/* Sol taraf: Dükkan görseli ve açıklaması | Sağ taraf: Resimsiz Günün Yemeği */}
             <div className="relative z-10 px-6 md:px-12 lg:px-16 pb-14 md:pb-20 grid grid-cols-12 gap-6 md:gap-10 items-end">
                 <div className="col-span-12 md:col-span-8 relative">
                     <motion.div
@@ -151,22 +164,23 @@ export default function Hero({ onExplore }) {
                         style={{ borderTop: "1px solid var(--line)" }}
                     >
                         <img
-                            src={todaySpecial?.image || DEFAULT_IMG}
-                            alt={getItemName(todaySpecial)}
+                            src={siteSettings.hero_image || DEFAULT_SHOP_IMG}
+                            alt={siteSettings.hero_title}
                             className="w-full h-full object-cover"
                             loading="eager"
                         />
                         <div className="absolute bottom-0 inset-x-0 p-6 bg-gradient-to-t from-black/70 via-black/30 to-transparent text-bone">
                             <p className="eyebrow text-bone/80 tracking-widest text-xs">
-                                GÜNÜN ÖZELİ
+                                MEKANIMIZ
                             </p>
                             <p className="font-serif italic text-2xl md:text-4xl mt-1 drop-shadow-md">
-                                {getItemName(todaySpecial)}
+                                {siteSettings.hero_subtitle}
                             </p>
                         </div>
                     </motion.div>
                 </div>
 
+                {/* Sağ taraf: Resimsiz Günün Şef Önerisi */}
                 <div className="col-span-12 md:col-span-4 flex flex-col gap-6 md:gap-8">
                     <motion.div
                         initial={{ opacity: 0 }}
@@ -174,7 +188,7 @@ export default function Hero({ onExplore }) {
                         transition={{ delay: 1.0, duration: 0.9 }}
                         className="border-t border-line pt-5"
                     >
-                        <p className="eyebrow mb-2">ŞEFIN ÖNERİSİ</p>
+                        <p className="eyebrow mb-2">GÜNÜN ŞEF ÖNERİSİ</p>
                         <p className="font-serif italic text-2xl md:text-3xl leading-tight text-ink">
                             {getItemName(todaySpecial)}
                         </p>
